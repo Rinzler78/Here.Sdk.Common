@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/src/Here.Sdk.Premium.Common/Here.Sdk.Premium.Common.csproj"
+SRC="$ROOT/src/Here.Sdk.Common/Here.Sdk.Common.csproj"
 
 if [ ! -f "$SRC" ]; then
   echo "ERROR: Main project not found at $SRC" >&2
@@ -26,9 +26,9 @@ if [ -n "$REFS" ]; then
   exit 1
 fi
 
-# Check no reference to sibling Here.Sdk.Premium.* packages
-if grep -r "Here\.Sdk\.Premium\." "$ROOT/src/" --include="*.csproj" | grep -v "Here\.Sdk\.Premium\.Common"; then
-  echo "ERROR: Reference to sibling Here.Sdk.Premium.* package found — violates inward dependency rule" >&2
+# Check no reference to sibling Here.Sdk.* packages
+if grep -r "Here\.Sdk\." "$ROOT/src/" --include="*.csproj" | grep -v "Here\.Sdk\.Common"; then
+  echo "ERROR: Reference to sibling Here.Sdk.* package found — violates inward dependency rule" >&2
   exit 1
 fi
 
