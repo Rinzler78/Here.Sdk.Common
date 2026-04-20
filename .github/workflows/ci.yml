@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, "feat/**", "fix/**", "chore/**", "docs/**", "spec/**"]
+  pull_request:
+    branches: [develop, master]
+
+jobs:
+  build:
+    name: build (${{ matrix.configuration }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Format check
+        if: matrix.configuration == 'Release'
+        run: dotnet format --verify-no-changes
+
+      - name: Build
+        run: dotnet build -c ${{ matrix.configuration }} --no-restore
+
+      - name: Test + coverage
+        if: matrix.configuration == 'Release'
+        run: |
+          dotnet test -c Release --no-build \
+            --collect:"XPlat Code Coverage" \
+            --results-directory artifacts/TestResults \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+
+      - name: Coverage gate
+        if: matrix.configuration == 'Release'
+        run: ./build/coverage-gate.sh
+
+      - name: Clean architecture check
+        if: matrix.configuration == 'Release'
+        run: ./build/clean-architecture-check.sh
+
+      - name: OpenSpec lint
+        if: matrix.configuration == 'Release'
+        run: ./build/openspec-lint.sh
+
+      - name: Detect credentials
+        if: matrix.configuration == 'Release'
+        run: ./build/detect-here-credentials.sh
+
+      - name: Pack
+        if: matrix.configuration == 'Release'
+        run: dotnet pack src/Here.Sdk.Common -c Release --no-build -o artifacts/packages
+
+      - name: Binary size check
+        if: matrix.configuration == 'Release'
+        run: ./build/measure-binary-size.sh
+
+      - name: Upload coverage
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: artifacts/TestResults/**/coverage.cobertura.xml

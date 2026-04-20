@@ -36,7 +36,7 @@ You review only Release Please bot PRs.
 ## Output
 
 ```
-## Release PR review — Here.Sdk.Premium.Common vX.Y.Z
+## Release PR review — Here.Sdk.Common vX.Y.Z
 
 **Expected bump:** MAJOR | MINOR | PATCH (from N commits since last tag)
 **Proposed bump:** vX.Y.Z → vX'.Y'.Z'

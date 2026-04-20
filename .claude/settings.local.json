@@ -13,7 +13,16 @@
       "Bash(rtk grep *)",
       "Bash(rtk dotnet *)",
       "Bash(git add *)",
-      "Bash(git commit -m 'chore: bootstrap repository structure *)"
+      "Bash(git commit -m 'chore: bootstrap repository structure *)",
+      "Bash(git *)",
+      "Bash(rtk find *)",
+      "Bash(rtk read *)",
+      "Bash(grep -E \"\\\\.md$\")",
+      "Bash(grep -E \"^[A-Z].*\\\\.md$\")",
+      "Bash(dotnet run *)",
+      "Bash(chmod +x /Users/bleclereperso/Projects/Here.Sdk.Common/build/bench.sh)",
+      "Bash(bash -n /Users/bleclereperso/Projects/Here.Sdk.Common/build/bench.sh)",
+      "Bash(python3 *)"
     ]
   }
 }

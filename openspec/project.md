@@ -1,15 +1,15 @@
-# Project — Here.Sdk.Premium.Common
+# Project — Here.Sdk.Common
 
 ## Identity
 
-- **Package:** `Here.Sdk.Premium.Common`
-- **Repository:** `github.com/rinzler78/Here.Sdk.Premium.Common`
+- **Package:** `Here.Sdk.Common`
+- **Repository:** `github.com/rinzler78/Here.Sdk.Common`
 - **TFM:** `netstandard2.0;netstandard2.1;net8.0`
 - **License:** MIT — community project, not affiliated with HERE Technologies.
 
 ## Mission
 
-Provide the minimal shared vocabulary used by every other package in the `Here.Sdk.Premium.*` ecosystem: geographic coordinates, distance/duration/speed units, a unified error taxonomy, and pure geometric helpers. Zero runtime dependencies, IO, or platform concerns.
+Provide the minimal shared vocabulary used by every other package in the `Here.Sdk.*` ecosystem: geographic coordinates, distance/duration/speed units, a unified error taxonomy, and pure geometric helpers. Zero runtime dependencies, IO, or platform concerns.
 
 ## In scope
 
@@ -20,10 +20,10 @@ Provide the minimal shared vocabulary used by every other package in the `Here.S
 
 ## Non-goals
 
-- No REST client, no networking (lives in `Here.Sdk.Premium.Core`).
+- No REST client, no networking (lives in `Here.Sdk.Core`).
 - No platform types (Java, ObjC, UIKit, Android).
 - No UI primitives.
-- No `IObservable<T>` contracts (those belong in `Here.Sdk.Premium.Abstractions`).
+- No `IObservable<T>` contracts (those belong in `Here.Sdk.Abstractions`).
 
 ## Target consumers
 

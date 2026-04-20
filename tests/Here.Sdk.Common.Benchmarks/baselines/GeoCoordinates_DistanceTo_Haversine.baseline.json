@@ -1,0 +1,7 @@
+{
+  "Method": "GeoCoordinates_DistanceTo_Haversine",
+  "MeanNanoseconds": 79.75,
+  "AllocatedBytesPerOperation": 136,
+  "CapturedAt": "2026-04-20",
+  "Note": "Intel Core i9-8950HK, .NET 8.0.18, macOS Sequoia 15.7.5"
+}

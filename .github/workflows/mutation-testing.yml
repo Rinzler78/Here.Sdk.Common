@@ -1,0 +1,34 @@
+name: Mutation Testing (Nightly)
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  stryker:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Install Stryker.NET
+        run: dotnet tool install -g dotnet-stryker
+
+      - name: Run Stryker
+        run: |
+          cd tests/Here.Sdk.Common.UnitTests
+          dotnet stryker --threshold-high 80 --threshold-low 75 --threshold-break 0
+
+      - name: Upload mutation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: tests/Here.Sdk.Common.UnitTests/StrykerOutput/reports/
