@@ -7,8 +7,8 @@ MAX_KB=100
 MAX_BYTES=$((MAX_KB * 1024))
 THRESHOLD_BYTES=$(( MAX_BYTES * 105 / 100 ))  # 5% tolerance = 105 KB
 
-dotnet pack src/Here.Sdk.Premium.Common -c Release -o artifacts/packages --no-build 2>/dev/null \
-  || dotnet pack src/Here.Sdk.Premium.Common -c Release -o artifacts/packages
+dotnet pack src/Here.Sdk.Common -c Release -o artifacts/packages --no-build 2>/dev/null \
+  || dotnet pack src/Here.Sdk.Common -c Release -o artifacts/packages
 
 NUPKG=$(find artifacts/packages -name "*.nupkg" | grep -v "\.symbols\." | head -1)
 if [ -z "$NUPKG" ]; then
