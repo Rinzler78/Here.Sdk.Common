@@ -1,0 +1,17 @@
+{
+  "version": "0.2",
+  "language": "en-US",
+  "words": [],
+  "dictionaries": ["here-ecosystem"],
+  "dictionaryDefinitions": [
+    { "name": "here-ecosystem", "path": "./.cspell/here-ecosystem.txt", "addWords": true }
+  ],
+  "ignorePaths": [
+    "bin/**", "obj/**", "artifacts/**", "*.lock", "*.sln",
+    "openspec/changes/archive/**"
+  ],
+  "ignoreWords": [],
+  "patterns": [
+    { "name": "non-ascii", "pattern": "[^\\x00-\\x7F]" }
+  ]
+}

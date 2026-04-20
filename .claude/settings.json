@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git branch:*)",
+      "Bash(git rev-parse:*)", "Bash(git ls-files:*)", "Bash(git describe:*)",
+      "Bash(dotnet restore:*)", "Bash(dotnet build:*)", "Bash(dotnet test:*)",
+      "Bash(dotnet format:*)", "Bash(dotnet pack:*)", "Bash(dotnet list:*)",
+      "Bash(dotnet tool:*)", "Bash(dotnet validate:*)", "Bash(nbgv get-version:*)",
+      "Bash(./build/build.sh:*)", "Bash(./build/test.sh:*)", "Bash(./build/verify.sh:*)",
+      "Bash(./build/coverage-gate.sh:*)", "Bash(./build/clean-architecture-check.sh:*)",
+      "Bash(./build/openspec-lint.sh)", "Bash(./build/detect-here-credentials.sh:*)",
+      "Bash(./build/version.sh:*)", "Bash(pre-commit run:*)",
+      "Bash(gh pr list:*)", "Bash(gh pr view:*)", "Bash(gh issue list:*)",
+      "Bash(gh workflow view:*)", "Bash(gh run list:*)", "Bash(gh release list:*)",
+      "Bash(ls:*)", "Bash(tree:*)",
+      "mcp__context7__*", "mcp__serena__find_file", "mcp__serena__find_symbol",
+      "mcp__serena__find_referencing_symbols", "mcp__serena__get_symbols_overview",
+      "mcp__serena__list_dir", "mcp__serena__search_for_pattern", "mcp__serena__read_file"
+    ],
+    "deny": [
+      "Bash(git push:*)", "Bash(git push --force:*)", "Bash(git reset --hard:*)",
+      "Bash(git checkout main)", "Bash(git checkout develop)",
+      "Bash(git commit*--no-verify*)", "Bash(dotnet nuget push:*)",
+      "Bash(gh pr merge:*)", "Bash(gh release create:*)", "Bash(rm -rf:*)", "Bash(sudo:*)",
+      "mcp__serena__write_memory", "mcp__serena__read_memory",
+      "mcp__serena__list_memories", "mcp__serena__delete_memory"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash -c 'b=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); case \"$b\" in main|develop|release/*) echo \"[branch-guard] REFUSING: on protected branch $b. Create feat/*, fix/*, chore/*, docs/*, or spec/* first.\" >&2; exit 2 ;; esac'" },
+          { "type": "command", "command": "bash -c 'if [ -x ./build/detect-here-credentials.sh ]; then ./build/detect-here-credentials.sh --hook-mode || exit 2; fi'" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      { "matcher": "Edit|MultiEdit|Write",
+        "hooks": [ { "type": "command", "command": "bash -c 'case \"$CLAUDE_TOOL_ARG_FILE_PATH\" in *.cs) command -v dotnet >/dev/null && dotnet format whitespace --include \"$CLAUDE_TOOL_ARG_FILE_PATH\" 2>/dev/null || true ;; esac'" } ]
+      }
+    ],
+    "Stop": [
+      { "matcher": ".*",
+        "hooks": [ { "type": "command", "command": "bash -c 'd=$(git status --porcelain 2>/dev/null | head -5); [ -n \"$d\" ] && echo -e \"\\n── Pre-PR gate: ./build/verify.sh (format+build+test+coverage-gate+clean-arch+pre-commit+openspec-lint+secrets). Update openspec/specs/package-api/spec.md if public surface changed. Conventional Commits.\"; exit 0'" } ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash -c 'b=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); d=$(git status --porcelain 2>/dev/null | wc -l | tr -d \" \"); [ \"$d\" = \"0\" ] && s=clean || s=\"${d} dirty\"; echo \"Common | $b | $s\"'"
+  },
+  "env": {
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_NOLOGO": "1",
+    "NUGET_XMLDOC_MODE": "skip"
+  }
+}

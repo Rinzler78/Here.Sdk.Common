@@ -1,0 +1,33 @@
+# Build outputs
+bin/
+obj/
+artifacts/
+TestResults/
+StrykerOutput/
+BenchmarkDotNet.Artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Pre-commit
+.pre-commit-cache/
+
+# Coverage
+coverage/
+*.opencover.xml
+*.cobertura.xml
+lcov.info

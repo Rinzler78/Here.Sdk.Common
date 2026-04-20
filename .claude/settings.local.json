@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__filesystem__directory_tree",
+      "mcp__filesystem__list_directory_with_sizes",
+      "Bash(rtk ls *)",
+      "Bash(rtk git *)",
+      "Bash(git init *)",
+      "Bash(dotnet new *)",
+      "Bash(dotnet sln *)",
+      "Bash(chmod +x build/*.sh)",
+      "Bash(sed -i '' 's|SEARCH_DIRS=\\(\"$ROOT/src\" \"$ROOT/tests\" \"$ROOT/build\" \"$ROOT/.github\"\\)|# build/ excluded: the script itself contains the patterns it searches for\\\\nSEARCH_DIRS=\\(\"$ROOT/src\" \"$ROOT/tests\" \"$ROOT/.github\"\\)|' build/detect-here-credentials.sh)",
+      "Bash(rtk grep *)",
+      "Bash(rtk dotnet *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'chore: bootstrap repository structure *)"
+    ]
+  }
+}
