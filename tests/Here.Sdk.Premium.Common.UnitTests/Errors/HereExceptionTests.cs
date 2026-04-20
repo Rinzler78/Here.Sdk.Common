@@ -68,4 +68,13 @@ public sealed class HereExceptionTests
         var ex = new HereNetworkException("outer", inner);
         ex.InnerException.Should().Be(inner);
     }
+
+    [Fact]
+    public void HereAuthenticationException_WithInnerException_Stores()
+    {
+        var inner = new InvalidOperationException("cause");
+        var ex = new HereAuthenticationException("auth failed", inner);
+        ex.Code.Should().Be(HereErrorCode.AuthenticationFailure);
+        ex.InnerException.Should().Be(inner);
+    }
 }

@@ -46,4 +46,17 @@ public sealed class DistanceTests
         var result = new Distance(100) * 3.0;
         result.Meters.Should().Be(300);
     }
+
+    [Fact]
+    public void Multiplication_ScalarByDistance_Scales()
+    {
+        var result = 3.0 * new Distance(100);
+        result.Meters.Should().Be(300);
+    }
+
+    [Fact]
+    public void ToString_InvariantCulture()
+    {
+        new Distance(1500).ToString().Should().Be("1500 m");
+    }
 }

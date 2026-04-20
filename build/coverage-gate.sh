@@ -35,13 +35,16 @@ print(f'{float(val)*100:.1f}')
 
 LINE=$(extract "line-rate")
 BRANCH=$(extract "branch-rate")
-# method coverage from summary
+# method coverage: a method is covered when it contains at least one hit line
 METHOD=$(python3 -c "
 import xml.etree.ElementTree as ET
 tree = ET.parse('$XML')
 root = tree.getroot()
-covered = sum(int(m.attrib.get('hits','0')) > 0 for pkg in root.iter('package') for cls in pkg.iter('class') for m in cls.iter('method'))
-total = sum(1 for pkg in root.iter('package') for cls in pkg.iter('class') for m in cls.iter('method'))
+covered = 0; total = 0
+for m in root.iter('method'):
+    total += 1
+    if any(int(l.attrib.get('hits','0')) > 0 for l in m.iter('line')):
+        covered += 1
 print(f'{(covered/total*100):.1f}' if total > 0 else '100.0')
 ")
 

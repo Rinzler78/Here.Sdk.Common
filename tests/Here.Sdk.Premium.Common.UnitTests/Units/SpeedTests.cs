@@ -26,4 +26,16 @@ public sealed class SpeedTests
         var speed = Speed.FromMph(60.0);
         speed.ToMph().Should().BeApproximately(60.0, 1e-9);
     }
+
+    [Fact]
+    public void Zero_HasZeroMetersPerSecond()
+    {
+        Speed.Zero.MetersPerSecond.Should().Be(0.0);
+    }
+
+    [Fact]
+    public void ToString_InvariantFormat()
+    {
+        new Speed(5).ToString().Should().Be("5 m/s");
+    }
 }

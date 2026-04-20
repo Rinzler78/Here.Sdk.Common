@@ -51,4 +51,10 @@ public sealed class DurationTests
     {
         Duration.FromSeconds(10).Should().NotBe(Duration.FromSeconds(20));
     }
+
+    [Fact]
+    public void ToString_InvariantFormat()
+    {
+        Duration.FromSeconds(90).ToString().Should().Be("00:01:30");
+    }
 }

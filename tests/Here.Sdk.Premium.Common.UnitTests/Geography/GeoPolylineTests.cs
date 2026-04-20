@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using Here.Sdk.Premium.Common.Geography;
 using Xunit;
@@ -36,5 +37,19 @@ public sealed class GeoPolylineTests
         var berlin = new GeoCoordinates(52.5200, 13.4050);
         var poly = new GeoPolyline([paris, berlin]);
         poly.Length().Should().BeInRange(870_000, 890_000);
+    }
+
+    [Fact]
+    public void Constructor_NullVertices_Throws()
+    {
+        var act = () => new GeoPolyline(null!);
+        act.Should().Throw<ArgumentNullException>().WithParameterName("vertices");
+    }
+
+    [Fact]
+    public void Equality_SameVertices_Equal()
+    {
+        var vertices = new[] { new GeoCoordinates(0, 0), new GeoCoordinates(1, 1) };
+        new GeoPolyline(vertices).Should().Be(new GeoPolyline(vertices));
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Here.Sdk.Premium.Common.Errors;
@@ -51,5 +52,35 @@ public sealed class FlexiblePolylineTests
         var encoded = FlexiblePolyline.Encode([]);
         var decoded = FlexiblePolyline.Decode(encoded);
         decoded.Vertices.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Encode_NullCoordinates_Throws()
+    {
+        var act = () => FlexiblePolyline.Encode(null!);
+        act.Should().Throw<ArgumentNullException>().WithParameterName("coordinates");
+    }
+
+    [Fact]
+    public void Encode_PrecisionBelowMinimum_Throws()
+    {
+        var act = () => FlexiblePolyline.Encode([], precision: 0);
+        act.Should().Throw<ArgumentOutOfRangeException>().WithParameterName("precision");
+    }
+
+    [Fact]
+    public void Encode_PrecisionAboveMaximum_Throws()
+    {
+        var act = () => FlexiblePolyline.Encode([], precision: 16);
+        act.Should().Throw<ArgumentOutOfRangeException>().WithParameterName("precision");
+    }
+
+    [Fact]
+    public void Encode_HighPrecision_RoundTrips()
+    {
+        var vertices = new List<GeoCoordinates> { new(48.8566, 2.3522) };
+        var encoded = FlexiblePolyline.Encode(vertices, precision: 7);
+        var decoded = FlexiblePolyline.Decode(encoded);
+        decoded.Vertices[0].Latitude.Should().BeApproximately(48.8566, 1e-7);
     }
 }
