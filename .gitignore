@@ -34,3 +34,6 @@ coverage/
 *.opencover.xml
 *.cobertura.xml
 lcov.info
+
+# Local secrets — never commit
+.env

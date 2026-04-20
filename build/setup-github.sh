@@ -96,7 +96,7 @@ fi
 
 # ── 3. Topics ─────────────────────────────────────────────────────────────────
 echo "=== [3/9] Topics ==="
-cur_topics=$(gh repo view "$REPO" --json repositoryTopics --jq '[.repositoryTopics[].name] | sort | @json')
+cur_topics=$(gh repo view "$REPO" --json repositoryTopics --jq '([.repositoryTopics[]?.name] // []) | sort | @json')
 want_topics=$(echo "$TOPICS" | python3 -c "import sys,json; t=json.load(sys.stdin); t.sort(); print(json.dumps(t))")
 if [ "$cur_topics" != "$want_topics" ]; then
   gh api -X PUT "repos/$REPO/topics" --input <(echo "{\"names\":$(echo "$TOPICS" | python3 -c 'import sys,json;t=json.load(sys.stdin);print(json.dumps(t))')}") >/dev/null
@@ -191,9 +191,7 @@ print(json.dumps({
       'required_status_checks': $STATUS_CHECKS
     }}
   ],
-  'bypass_actors': [
-    {'actor_id': 0, 'actor_type': 'Integration', 'bypass_mode': 'always'}
-  ]
+  # bypass_actors: add release-please GitHub App ID once installed on the repo
 }))
 " STATUS_CHECKS="$STATUS_CHECKS")
 
