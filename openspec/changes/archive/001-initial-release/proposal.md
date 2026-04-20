@@ -3,7 +3,7 @@
 ---
 id: 001-initial-release
 title: Create Here.Sdk.Common v1.0 (initial release)
-status: draft
+status: archived
 author: "@rinzler78"
 reviewers: []
 created: 2026-04-18

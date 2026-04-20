@@ -45,11 +45,11 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 2. Shared specs land (this proposal's deltas become current specs)
 
-- [ ] 2.1 On merge of this PR, move every file from `openspec/changes/001-initial-release/specs/` to `openspec/specs/` (1:1 path mapping).
+- [x] 2.1 On merge of this PR, move every file from `openspec/changes/001-initial-release/specs/` to `openspec/specs/` (1:1 path mapping).
   - **Acceptance:** `openspec/specs/package-api/spec.md`, `openspec/specs/testing/spec.md`, `openspec/specs/coding-principles/spec.md`, `openspec/specs/performance/spec.md`, `openspec/specs/governance/spec.md`, `openspec/specs/openspec-methodology/spec.md` exist with the same content, updated frontmatter `status: accepted`.
   - **Verification:** `./build/openspec-lint.sh` green.
 
-- [ ] 2.2 Archive this proposal under `openspec/changes/archive/001-initial-release/` with frontmatter `status: archived`.
+- [x] 2.2 Archive this proposal under `openspec/changes/archive/001-initial-release/` with frontmatter `status: archived`.
   - **Acceptance:** directory moved; git history preserved (no squash of the move).
   - **Verification:** `git log --follow` resolves both old and new paths.
 
@@ -215,7 +215,7 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
   - **Acceptance:** 5 ADR files with sequential IDs, `status: accepted`, structured per ADR template.
   - **Verification:** `openspec-lint` integrity check resolves cross-references from `tech.md`.
 
-- [ ] 7.4 Author `docs/getting-started.md` and `docs/credentials-setup.md` stubs.
+- [x] 7.4 Author `docs/getting-started.md` and `docs/credentials-setup.md` stubs.
   - **Acceptance:** minimal but accurate content; links from README resolve.
   - **Verification:** reviewer pass.
 

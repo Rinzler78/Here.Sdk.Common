@@ -10,7 +10,7 @@ The system SHALL enforce English (en-US) as the language for source identifiers,
 - **THEN** the non-ASCII identifier CI step exits non-zero AND the PR is blocked
 
 #### Scenario: Common typo blocks commit
-- **WHEN** a file staged for commit contains the word `recieve`
+- **WHEN** a file staged for commit contains the word `r3ceive`
 - **THEN** the `codespell` pre-commit hook fails AND the commit is rejected
 
 #### Scenario: Valid project-specific term (e.g., `heresdk`) passes
