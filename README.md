@@ -70,7 +70,7 @@ No HERE credentials are required to use this package. Credentials are needed by 
 
 - [Getting Started](docs/getting-started.md)
 - [Architecture Decision Records](docs/architecture/decision-records/)
-- [OpenSpec Proposal](openspec/changes/001-initial-release/proposal.md)
+- [OpenSpec Proposal](openspec/changes/archive/001-initial-release/proposal.md)
 
 ## Sample
 

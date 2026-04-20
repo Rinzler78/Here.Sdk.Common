@@ -111,7 +111,7 @@ function Apply-Ruleset([string]$name, [object]$payload) {
 $statusChecks = @(
     @{context='build (Debug)'},
     @{context='build (Release)'},
-    @{context='openspec-validate / validate'}
+    @{context='lint'}
 )
 $commonRules = @(
     @{type='deletion'},

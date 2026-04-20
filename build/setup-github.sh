@@ -138,7 +138,7 @@ _apply_ruleset() {
   fi
 }
 
-STATUS_CHECKS='[{"context":"build (Debug)"},{"context":"build (Release)"},{"context":"openspec-validate / validate"}]'
+STATUS_CHECKS='[{"context":"build (Debug)"},{"context":"build (Release)"},{"context":"lint"}]'
 
 DEVELOP_RULESET=$(python3 -c "
 import json

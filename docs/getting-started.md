@@ -22,8 +22,9 @@ using Here.Sdk.Common.Units;
 var paris = new GeoCoordinates(48.8566, 2.3522);
 var london = new GeoCoordinates(51.5074, -0.1278);
 
-// Compute distance
-var distance = paris.DistanceTo(london);
+// Compute distance between two points
+var polyline = new GeoPolyline(new[] { paris, london });
+var distance = polyline.Length();
 Console.WriteLine($"Paris → London: {distance.ToKilometers():F1} km");
 
 // Use unit system preference
@@ -32,7 +33,7 @@ var system = UnitSystem.Metric;
 
 ## Requirements
 
-- .NET Standard 2.0, 2.1, .NET 8.0, or .NET 9.0
+- .NET Standard 2.0, 2.1, or .NET 8.0
 - No runtime HERE credentials required — credentials are only needed by downstream `Here.Sdk.Core` packages.
 
 ## Next Steps

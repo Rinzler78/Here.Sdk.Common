@@ -4,7 +4,7 @@ on:
   push:
     branches: [develop, "feat/**", "fix/**", "chore/**", "docs/**", "spec/**"]
   pull_request:
-    branches: [develop, main]
+    branches: [develop, master]
 
 jobs:
   build:

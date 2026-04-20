@@ -43,7 +43,7 @@ public sealed record GeoPolyline
         double h = sinDLat * sinDLat
                    + Math.Cos(ToRadians(a.Latitude)) * Math.Cos(ToRadians(b.Latitude))
                    * sinDLon * sinDLon;
-        return 2.0 * r * Math.Asin(Math.Sqrt(h));
+        return 2.0 * r * Math.Asin(Math.Sqrt(Math.Min(1.0, h)));
     }
 
     private static double ToRadians(double degrees) => degrees * Math.PI / 180.0;
