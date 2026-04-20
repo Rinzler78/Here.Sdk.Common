@@ -32,7 +32,7 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "bash -c 'b=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); case \"$b\" in main|develop|release/*) echo \"[branch-guard] REFUSING: on protected branch $b. Create feat/*, fix/*, chore/*, docs/*, or spec/* first.\" >&2; exit 2 ;; esac'" },
+          { "type": "command", "command": "bash -c 'b=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); case \"$b\" in master|develop|release/*) echo \"[branch-guard] REFUSING: on protected branch $b. Create feat/*, fix/*, chore/*, docs/*, or spec/* first.\" >&2; exit 2 ;; esac'" },
           { "type": "command", "command": "bash -c 'if [ -x ./build/detect-here-credentials.sh ]; then ./build/detect-here-credentials.sh --hook-mode || exit 2; fi'" }
         ]
       }

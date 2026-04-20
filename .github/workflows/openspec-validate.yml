@@ -1,0 +1,14 @@
+name: OpenSpec Validate
+
+on:
+  pull_request:
+    paths:
+      - "openspec/**"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: OpenSpec lint
+        run: ./build/openspec-lint.sh
