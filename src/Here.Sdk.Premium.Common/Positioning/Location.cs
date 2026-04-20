@@ -30,6 +30,9 @@ public sealed record Location
     /// <summary>Speed accuracy in m/s, or <c>null</c> if unknown.</summary>
     public double? SpeedAccuracyInMetersPerSecond { get; init; }
 
+    /// <summary>Altitude accuracy in meters, or <c>null</c> if unknown.</summary>
+    public double? AltitudeAccuracyInMeters { get; init; }
+
     /// <summary>Initializes a new <see cref="Location"/> with required fields.</summary>
     public Location(GeoCoordinates coordinates, DateTimeOffset timestamp)
     {

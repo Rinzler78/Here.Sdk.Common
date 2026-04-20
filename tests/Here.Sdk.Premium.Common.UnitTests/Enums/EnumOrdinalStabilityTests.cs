@@ -2,9 +2,13 @@ using FluentAssertions;
 using Here.Sdk.Premium.Common.Common;
 using Here.Sdk.Premium.Common.Ev;
 using Here.Sdk.Premium.Common.Map;
+using Here.Sdk.Premium.Common.Navigation;
 using Here.Sdk.Premium.Common.Positioning;
+using Here.Sdk.Premium.Common.Routing;
+using Here.Sdk.Premium.Common.Search;
 using Here.Sdk.Premium.Common.Traffic;
 using Here.Sdk.Premium.Common.Transport;
+using Here.Sdk.Premium.Common.Units;
 using Xunit;
 
 namespace Here.Sdk.Premium.Common.UnitTests.Enums;
@@ -54,4 +58,37 @@ public sealed class EnumOrdinalStabilityTests
     [Fact]
     public void MapScheme_NormalDay_IsOrdinal0() =>
         ((int)MapScheme.NormalDay).Should().Be(0);
+
+    [Fact]
+    public void UnitSystem_Metric_IsOrdinal0() =>
+        ((int)UnitSystem.Metric).Should().Be(0);
+
+    [Fact]
+    public void DayOfWeek_Monday_IsOrdinal0() =>
+        ((int)Search.DayOfWeek.Monday).Should().Be(0);
+
+    [Fact]
+    public void LocationAccuracy_Default_IsNavigationAccuracy() =>
+        default(LocationAccuracy).Should().Be(LocationAccuracy.NavigationAccuracy);
+
+    [Fact]
+    public void EvseState_Default_IsNotUnknown() =>
+        default(EvseState).Should().NotBe(EvseState.Unknown);
+
+    [Fact]
+    public void MapScheme_Default_IsNormalDay() =>
+        default(MapScheme).Should().Be(MapScheme.NormalDay);
+
+    [Fact]
+    public void SpeedWarningStatus_HasExactlyTwoMembers()
+    {
+        var members = Enum.GetValues<SpeedWarningStatus>();
+        members.Should().HaveCount(2);
+        members.Should().Contain(SpeedWarningStatus.SpeedLimitExceeded);
+        members.Should().Contain(SpeedWarningStatus.SpeedLimitRestored);
+    }
+
+    [Fact]
+    public void ChargingConnectorType_SaeJ3400_IsPresent() =>
+        Enum.IsDefined(ChargingConnectorType.SaeJ3400).Should().BeTrue();
 }

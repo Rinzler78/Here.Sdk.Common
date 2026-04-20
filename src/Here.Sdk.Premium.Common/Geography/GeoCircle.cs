@@ -3,7 +3,7 @@ using System;
 namespace Here.Sdk.Premium.Common.Geography;
 
 /// <summary>Circle defined by a center coordinate and a radius.</summary>
-public sealed record GeoCircle
+public readonly record struct GeoCircle
 {
     /// <summary>Center of the circle.</summary>
     public GeoCoordinates Center { get; }
@@ -11,7 +11,7 @@ public sealed record GeoCircle
     /// <summary>Radius in meters. Must be &gt;= 0.</summary>
     public double RadiusInMeters { get; }
 
-    /// <summary>Initializes a new <see cref="GeoCircle"/>.</summary>
+    /// <summary>Initializes a new <see cref="GeoCircle"/> and validates the radius.</summary>
     /// <exception cref="ArgumentOutOfRangeException">When <paramref name="radiusInMeters"/> is negative.</exception>
     public GeoCircle(GeoCoordinates center, double radiusInMeters)
     {
