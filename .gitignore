@@ -26,6 +26,9 @@ Thumbs.db
 # Pre-commit
 .pre-commit-cache/
 
+# Git worktrees (never committed — local only)
+.worktrees/
+
 # Coverage
 coverage/
 *.opencover.xml
