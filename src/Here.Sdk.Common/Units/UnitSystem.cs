@@ -1,4 +1,4 @@
-namespace Here.Sdk.Common.Common;
+namespace Here.Sdk.Common.Units;
 
 /// <summary>Measurement unit system preference.</summary>
 public enum UnitSystem

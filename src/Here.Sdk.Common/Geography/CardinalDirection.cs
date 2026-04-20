@@ -1,4 +1,4 @@
-namespace Here.Sdk.Common.Common;
+namespace Here.Sdk.Common.Geography;
 
 /// <summary>8-point compass cardinal and intercardinal directions.</summary>
 public enum CardinalDirection

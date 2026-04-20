@@ -27,19 +27,19 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 1. Repository bootstrap
 
-- [ ] 1.0 Initialise the local Git repository (`git init`) before §1.1 scaffolding is committed and before §1.3 `pre-commit install` — pre-commit hooks require `.git` to operate.
+- [x] 1.0 Initialise the local Git repository (`git init`) before §1.1 scaffolding is committed and before §1.3 `pre-commit install` — pre-commit hooks require `.git` to operate.
   - **Acceptance:** `git init` executed at repo root with `git config init.defaultBranch master`; `.git/` present; bootstrap exception documented — the branch-guard hook (forbid direct commit on `master`/`develop`) applies only after §9.6 `setup-github.sh` has pushed `master` + `develop` and applied Rulesets.
   - **Verification:** `git rev-parse --is-inside-work-tree` returns `true`; `ls .git/HEAD` exists.
 
-- [ ] 1.1 Initialise the repo skeleton (`src/`, `tests/`, `samples/`, `build/`, `docs/`, `.github/`, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `NuGet.config`, `version.json`, `.editorconfig`, `.gitignore`, `.gitattributes`, `.markdownlint.json`, `.yamllint`, `.pre-commit-config.yaml`, `.cspell.json`, `.cspell/here-ecosystem.txt`, `.codespellignore`).
+- [x] 1.1 Initialise the repo skeleton (`src/`, `tests/`, `samples/`, `build/`, `docs/`, `.github/`, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `NuGet.config`, `version.json`, `.editorconfig`, `.gitignore`, `.gitattributes`, `.markdownlint.json`, `.yamllint`, `.pre-commit-config.yaml`, `.cspell.json`, `.cspell/here-ecosystem.txt`, `.codespellignore`).
   - **Acceptance:** all files present; `dotnet new gitignore` not used (hand-curated per spec); `global.json` pins SDK `8.0.400`.
   - **Verification:** `./build/verify.sh --skip-test` green on the empty repo.
 
-- [ ] 1.2 Install `Nerdbank.GitVersioning` via `.config/dotnet-tools.json` and write `version.json` seeded at `"version": "0.1"`.
+- [x] 1.2 Install `Nerdbank.GitVersioning` via `.config/dotnet-tools.json` and write `version.json` seeded at `"version": "0.1"`.
   - **Acceptance:** `nbgv get-version -v NuGetPackageVersion` returns a non-empty value.
   - **Verification:** command runs clean on `develop`.
 
-- [ ] 1.3 Install `pre-commit` and wire every hook listed in the hooks section below.
+- [x] 1.3 Install `pre-commit` and wire every hook listed in the hooks section below.
   - **Acceptance:** `pre-commit install` + `--hook-type commit-msg` + `--hook-type pre-push` succeed.
   - **Verification:** `pre-commit run --all-files` green on the empty repo.
 
@@ -55,163 +55,163 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 3. Public API implementation
 
-- [ ] 3.1 Implement `GeoCoordinates` under `src/Geography/GeoCoordinates.cs`.
+- [x] 3.1 Implement `GeoCoordinates` under `src/Geography/GeoCoordinates.cs`.
   - **Acceptance:** `public readonly record struct GeoCoordinates(double Latitude, double Longitude, double? Altitude = null)`; primary ctor throws `ArgumentOutOfRangeException` when `Latitude ∉ [-90, 90]` or `Longitude ∉ [-180, 180]`; `ToString()` renders invariant-culture string.
   - **Verification:** `tests/…/Geography/GeoCoordinatesTests.cs` covers valid, out-of-range, altitude-null, equality, ToString with `fr-FR` current culture.
   - **Coverage:** 100 % line + branch on `GeoCoordinates.cs`.
 
-- [ ] 3.2 Implement `GeoBearing` under `src/Geography/GeoBearing.cs`.
+- [x] 3.2 Implement `GeoBearing` under `src/Geography/GeoBearing.cs`.
   - **Acceptance:** `public readonly record struct GeoBearing(double DegreesFromNorth)`; normalises input to `[0, 360)` in primary ctor.
   - **Verification:** tests cover valid, negative wrap, overflow wrap, equality, GetHashCode across normalised values.
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.3 Implement `GeoBoundingBox`, `GeoPolyline`, `EarthConstants`, `FlexiblePolyline` under `src/Geography/`.
+- [x] 3.3 Implement `GeoBoundingBox`, `GeoPolyline`, `EarthConstants`, `FlexiblePolyline` under `src/Geography/`.
   - **Acceptance:** each type matches its `Requirement` in `specs/package-api/spec.md`; `FlexiblePolyline.Decode` round-trips with `Encode`.
   - **Verification:** per-type test class with one `[Fact]` per documented scenario.
   - **Coverage:** 100 % line + branch on each file.
 
-- [ ] 3.4 Implement `Distance`, `Duration`, `Speed`, `DistanceUnit`, `SpeedUnit` under `src/Units/`.
+- [x] 3.4 Implement `Distance`, `Duration`, `Speed`, `DistanceUnit`, `SpeedUnit` under `src/Units/`.
   - **Acceptance:** conversions symmetric; arithmetic operators (`+`, `-`, `*` by scalar) defined; `Distance.Zero` constant.
   - **Verification:** parameterised `[Theory]` tests cover all unit conversions; property-based tests via FsCheck for symmetry (optional — tracked as WARN).
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.5 Implement `HereErrorCode`, `HereException` + subclasses under `src/Errors/`.
+- [x] 3.5 Implement `HereErrorCode`, `HereException` + subclasses under `src/Errors/`.
   - **Acceptance:** exception hierarchy rooted at `HereException : Exception`; each subclass carries the expected auxiliary data (`RetryAfter`, `FieldName`).
   - **Verification:** tests cover construction, serialisation round-trip (`.NET 8` `ISerializable` where applicable), `Code` property set.
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.6 Implement extended geography types: `GeoCircle`, `GeoPolygon`, `GeoCorridor`, `GeoOrientation` under `src/Geography/`.
+- [x] 3.6 Implement extended geography types: `GeoCircle`, `GeoPolygon`, `GeoCorridor`, `GeoOrientation` under `src/Geography/`.
   - **Acceptance:** `GeoCircle` validates `RadiusInMeters >= 0`; `GeoPolygon` validates ≥ 3 vertices; `GeoCorridor` validates non-negative half-width; `GeoOrientation` normalises bearing to `[0, 360)` and clamps tilt/roll.
   - **Verification:** per-type test class with one `[Fact]` per documented BDD scenario in `specs/package-api/spec.md`.
   - **Coverage:** 100 % line + branch on each file.
 
-- [ ] 3.7 Implement 2D/3D geometry value types under `src/Geometry/`: `Point2D`, `Point3D`, `Anchor2D`, `Size2D`, `Rectangle2D`, `Angle`, `AngleRange`, `IntegerRange`.
+- [x] 3.7 Implement 2D/3D geometry value types under `src/Geometry/`: `Point2D`, `Point3D`, `Anchor2D`, `Size2D`, `Rectangle2D`, `Angle`, `AngleRange`, `IntegerRange`.
   - **Acceptance:** all are `readonly record struct`; `Angle.FromRadians` / `ToRadians` round-trips within 1e-9; `IntegerRange` rejects `Min > Max`; `Size2D` rejects negative dimensions.
   - **Verification:** parameterised `[Theory]` covering valid, boundary, and error cases.
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.8 Implement `Location` record under `src/Positioning/Location.cs`.
+- [x] 3.8 Implement `Location` record under `src/Positioning/Location.cs`.
   - **Acceptance:** required fields `Coordinates` + `Timestamp`; all optional sensor fields nullable; value equality by all fields.
   - **Verification:** tests cover minimal construction, full construction, equality, `GetHashCode` consistency.
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.9 Implement localisation types under `src/Localisation/`: `LanguageCode`, `CountryCode`, `LocalizedText`, `LocalizedTexts`.
+- [x] 3.9 Implement localisation types under `src/Localisation/`: `LanguageCode`, `CountryCode`, `LocalizedText`, `LocalizedTexts`.
   - **Acceptance:** `LanguageCode` and `CountryCode` validate non-empty input; `LocalizedTexts.GetText` returns preferred language or falls back to first entry.
   - **Verification:** tests cover: preferred language returned, fallback to first when preferred absent, empty list handled gracefully (returns null).
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.10 Implement identifier types under `src/Identifiers/`: `NameId`, `ExternalId`.
+- [x] 3.10 Implement identifier types under `src/Identifiers/`: `NameId`, `ExternalId`.
   - **Acceptance:** both validate non-empty `Name`/`Id`/`Provider` fields; value equality by all fields.
   - **Verification:** tests cover construction, equality, and ArgumentException on empty input.
   - **Coverage:** 100 % line + branch.
 
-- [ ] 3.11 Implement `UnitSystem`, `CardinalDirection` enums under `src/Units/` and `src/Geography/` respectively.
+- [x] 3.11 Implement `UnitSystem`, `CardinalDirection` enums under `src/Units/` and `src/Geography/` respectively.
   - **Acceptance:** `UnitSystem.Metric` is ordinal 0; `CardinalDirection.North` is ordinal 0; no values inserted between existing members.
   - **Verification:** `(int)UnitSystem.Metric == 0` and `(int)CardinalDirection.North == 0` asserted.
   - **Coverage:** enum files excluded from per-file coverage gate (pure data, no logic); enum-constant ordinal tests in `3.11` task test file.
 
-- [ ] 3.12 Implement transport-domain enums under `src/Transport/`: `TransportMode`, `VehicleType`, `TruckType`, `TruckCategory`, `TruckClass`, `FuelType`, `TruckFuelType`, `HazardousMaterial`, `TunnelCategory`.
+- [x] 3.12 Implement transport-domain enums under `src/Transport/`: `TransportMode`, `VehicleType`, `TruckType`, `TruckCategory`, `TruckClass`, `FuelType`, `TruckFuelType`, `HazardousMaterial`, `TunnelCategory`.
   - **Acceptance:** `HazardousMaterial` is a `[Flags]` enum; all compound flag combinations are expressible; ordinals stable (append-only).
   - **Verification:** flags test: `Explosive | Gas` sets both bits; test for every enum's first-member ordinal = 0.
   - **Coverage:** enum files excluded from per-file coverage gate (see §3.11 note).
 
-- [ ] 3.13 Implement routing-domain enums under `src/Routing/`: `WaypointType`, `OptimizationMode`, `ManeuverAction`, `SectionTransportMode`, `NoticeSeverity`, `IsolineRangeType`, `PaymentMethod`, `ChargingConnectorType`, `ChargingSupplyType`, `RoutePlaceType`.
+- [x] 3.13 Implement routing-domain enums under `src/Routing/`: `WaypointType`, `OptimizationMode`, `ManeuverAction`, `SectionTransportMode`, `NoticeSeverity`, `IsolineRangeType`, `PaymentMethod`, `ChargingConnectorType`, `ChargingSupplyType`, `RoutePlaceType`.
   - **Acceptance:** `ChargingConnectorType.SaeJ3400` present (NACS support); append-only contract documented via `[EditorBrowsable(EditorBrowsableState.Never)]` test comment.
   - **Verification:** all enum members compilable; `SaeJ3400` present in the enum definition.
   - **Coverage:** enum files excluded from per-file gate.
 
-- [ ] 3.14 Implement search-domain enums under `src/Search/`: `PlaceType`, `AddressType`, `DayOfWeek`, `EvseStatus`, `EvAccessType`.
+- [x] 3.14 Implement search-domain enums under `src/Search/`: `PlaceType`, `AddressType`, `DayOfWeek`, `EvseStatus`, `EvAccessType`.
   - **Acceptance:** `DayOfWeek.Monday` ordinal = 0; `EvseStatus.Unknown` is a valid discriminator value.
   - **Verification:** ordinal stability test for `DayOfWeek.Monday`.
   - **Coverage:** enum files excluded from per-file gate.
 
-- [ ] 3.15 Implement navigation-domain enums under `src/Navigation/`: `MilestoneType`, `MilestoneStatus`, `SpeedWarningStatus`, `RoadClassification`, `LaneRecommendationState`, `BorderCrossingType`, `SafetyCameraType`, `TollCollectionMethod`.
+- [x] 3.15 Implement navigation-domain enums under `src/Navigation/`: `MilestoneType`, `MilestoneStatus`, `SpeedWarningStatus`, `RoadClassification`, `LaneRecommendationState`, `BorderCrossingType`, `SafetyCameraType`, `TollCollectionMethod`.
   - **Acceptance:** `SpeedWarningStatus` has exactly 2 members (`SpeedLimitExceeded`, `SpeedLimitRestored`); switch expression covering both compiles without `CS8509`.
   - **Verification:** compile-time test (source generator or analyzer test) confirming exhaustiveness.
   - **Coverage:** enum files excluded from per-file gate.
 
-- [ ] 3.16 Implement traffic-domain enums under `src/Traffic/`: `TrafficIncidentType`, `TrafficIncidentImpact`.
+- [x] 3.16 Implement traffic-domain enums under `src/Traffic/`: `TrafficIncidentType`, `TrafficIncidentImpact`.
   - **Acceptance:** `TrafficIncidentImpact` members ordered so `Unknown < LowImpact < Minor < Major < Critical`.
   - **Verification:** ordinal comparison test.
   - **Coverage:** enum files excluded from per-file gate.
 
-- [ ] 3.17 Implement positioning-domain enums under `src/Positioning/`: `LocationAccuracy`.
+- [x] 3.17 Implement positioning-domain enums under `src/Positioning/`: `LocationAccuracy`.
   - **Acceptance:** `LocationAccuracy.NavigationAccuracy` is ordinal 0 (safe default).
   - **Verification:** `default(LocationAccuracy) == LocationAccuracy.NavigationAccuracy` asserted.
   - **Coverage:** enum file excluded from per-file gate.
 
-- [ ] 3.18 Implement EV and map domain enums: `EvChargingConnectorFormat`, `EvseState` under `src/Ev/`; `MapScheme`, `LineCap`, `VisibilityState`, `MapProjection` under `src/Map/`.
+- [x] 3.18 Implement EV and map domain enums: `EvChargingConnectorFormat`, `EvseState` under `src/Ev/`; `MapScheme`, `LineCap`, `VisibilityState`, `MapProjection` under `src/Map/`.
   - **Acceptance:** `EvseState.Unknown` is NOT ordinal 0 (avoid false-positive default); `MapScheme.NormalDay` is ordinal 0.
   - **Verification:** `default(EvseState) != EvseState.Available` (safety check); `default(MapScheme) == MapScheme.NormalDay`.
   - **Coverage:** enum files excluded from per-file gate.
 
 ## 4. Tests and quality gates
 
-- [ ] 4.1 Author `tests/Here.Sdk.Common.UnitTests/` with xUnit + FluentAssertions + coverlet.collector.
+- [x] 4.1 Author `tests/Here.Sdk.Common.UnitTests/` with xUnit + FluentAssertions + coverlet.collector.
   - **Acceptance:** project builds under all TFMs; `dotnet test` discovers and runs ≥ 1 test.
   - **Verification:** CI `build-netstandard` job green.
   - **Coverage:** see individual tasks; aggregate repo coverage ≥ 90 % line + 90 % branch + 95 % method.
 
-- [ ] 4.2 Implement `build/coverage-gate.sh` and `.ps1` that parses `artifacts/coverage/coverage.cobertura.xml` and fails on any file below 90 % line or 90 % branch or 95 % method.
+- [x] 4.2 Implement `build/coverage-gate.sh` and `.ps1` that parses `artifacts/coverage/coverage.cobertura.xml` and fails on any file below 90 % line or 90 % branch or 95 % method.
   - **Acceptance:** script exits non-zero when any `src/**/*.cs` file is below threshold; exits 0 when all pass.
   - **Verification:** seeded test with one intentionally-under-covered file triggers exit 1; removing it yields exit 0.
 
-- [ ] 4.3 Implement `build/clean-architecture-check.sh` and `.ps1` that parses csproj graph and ensures no upward dependency (per the layer rules in `coding-principles/spec.md`).
+- [x] 4.3 Implement `build/clean-architecture-check.sh` and `.ps1` that parses csproj graph and ensures no upward dependency (per the layer rules in `coding-principles/spec.md`).
   - **Acceptance:** reports zero violations for `Common`; a seeded `Common → Abstractions` reference triggers exit 1.
   - **Verification:** dry-run against the repo.
 
-- [ ] 4.4 Implement `build/openspec-lint.sh` and `.ps1` enforcing the validation rules from `openspec-methodology/spec.md`.
+- [x] 4.4 Implement `build/openspec-lint.sh` and `.ps1` enforcing the validation rules from `openspec-methodology/spec.md`.
   - **Acceptance:** BLOCK on missing frontmatter, missing sections, scenario without WHEN/THEN, SemVer mismatch; exit 0 when clean.
   - **Verification:** run against this proposal pre-merge → green.
 
-- [ ] 4.5 Implement `build/detect-here-credentials.sh` and `.ps1` scanning for HERE credential patterns.
+- [x] 4.5 Implement `build/detect-here-credentials.sh` and `.ps1` scanning for HERE credential patterns.
   - **Acceptance:** flags a seeded fake credential in a staged file; exits 0 on the clean repo.
   - **Verification:** unit test with seeded fake.
 
 ## 5. Performance
 
-- [ ] 5.1 Author `tests/Here.Sdk.Common.Benchmarks/` with BenchmarkDotNet.
+- [x] 5.1 Author `tests/Here.Sdk.Common.Benchmarks/` with BenchmarkDotNet.
   - **Acceptance:** project builds; `[MemoryDiagnoser]` attributes set; baselines folder exists.
   - **Verification:** `dotnet run -c Release --project tests/…Benchmarks/` completes.
 
-- [ ] 5.2 Establish baselines for the hot-path methods annotated `// PERF: hot path`: `GeoCoordinates.DistanceTo`, `GeoBearing` constructor, `FlexiblePolyline.Decode`.
+- [x] 5.2 Establish baselines for the hot-path methods annotated `// PERF: hot path`: `GeoCoordinates.DistanceTo`, `GeoBearing` constructor, `FlexiblePolyline.Decode`.
   - **Acceptance:** `baselines/*.json` files committed; each documents the allocation budget and the target mean time.
   - **Verification:** `./build/bench.sh` green; regression > 10 % mean time or > 5 % allocations fails.
   - **Coverage:** not applicable — benchmark code excluded from coverage via `[ExcludeFromCodeCoverage]`.
 
-- [ ] 5.3 Implement `build/measure-binary-size.sh` and `.ps1` that reports the Release `.nupkg` size and fails if > 100 KB.
+- [x] 5.3 Implement `build/measure-binary-size.sh` and `.ps1` that reports the Release `.nupkg` size and fails if > 100 KB.
   - **Acceptance:** script outputs size in bytes + JSON report under `artifacts/size-report.json`.
   - **Verification:** current pack is well under budget.
 
 ## 6. CI / CD
 
-- [ ] 6.1 Author `.github/workflows/ci.yml` — matrix `ubuntu-latest` × `Debug|Release`, steps `setup-dev-env`, `verify`, `build`, `test`, `coverage-gate`, `pack`.
+- [x] 6.1 Author `.github/workflows/ci.yml` — matrix `ubuntu-latest` × `Debug|Release`, steps `setup-dev-env`, `verify`, `build`, `test`, `coverage-gate`, `pack`.
   - **Acceptance:** workflow green on PR.
   - **Verification:** open a test PR; CI green.
 
-- [ ] 6.2 Author `.github/workflows/release-please.yml` with `googleapis/release-please-action@v4` and `release-please-config.json` / `release-please-manifest.json`.
+- [x] 6.2 Author `.github/workflows/release-please.yml` with `googleapis/release-please-action@v4` and `release-please-config.json` / `release-please-manifest.json`.
   - **Acceptance:** push to `master` creates or updates a release PR.
   - **Verification:** merge a `feat:` commit and observe Release Please behaviour.
 
-- [ ] 6.3 Author `.github/workflows/nuget-publish.yml` triggered by `release.published`.
+- [x] 6.3 Author `.github/workflows/nuget-publish.yml` triggered by `release.published`.
   - **Acceptance:** workflow pushes the `.nupkg` + `.snupkg` to nuget.org with `NUGET_API_KEY`.
   - **Verification:** dry run on a test tag.
 
-- [ ] 6.4 Author `.github/workflows/openspec-validate.yml` triggered on PRs touching `openspec/**`.
+- [x] 6.4 Author `.github/workflows/openspec-validate.yml` triggered on PRs touching `openspec/**`.
   - **Acceptance:** workflow runs `./build/openspec-lint.sh` and fails on BLOCK.
   - **Verification:** seeded bad proposal fails; clean proposal passes.
 
 ## 7. Documentation
 
-- [ ] 7.1 Author `README.md` with the 13 mandatory sections per `openspec/specs/readme/spec.md` (to be added later; for now inline the list in `README.md`).
+- [x] 7.1 Author `README.md` with the 13 mandatory sections per `openspec/specs/readme/spec.md` (to be added later; for now inline the list in `README.md`).
   - **Acceptance:** sections present: title, badges, install, quickstart, features, platforms, credentials link, docs links, sample, contributing, security, license, HERE disclaimer.
   - **Verification:** `markdownlint` green; reviewer confirms rendering on GitHub.
 
-- [ ] 7.2 Author `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), `SECURITY.md`, `LICENSE` (MIT).
+- [x] 7.2 Author `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), `SECURITY.md`, `LICENSE` (MIT).
   - **Acceptance:** all four files present with valid content.
   - **Verification:** `pre-commit run --all-files` green.
 
-- [ ] 7.3 Author ADR-0001 through ADR-0005 under `docs/architecture/decision-records/` per the list in `tech.md`.
+- [x] 7.3 Author ADR-0001 through ADR-0005 under `docs/architecture/decision-records/` per the list in `tech.md`.
   - **Acceptance:** 5 ADR files with sequential IDs, `status: accepted`, structured per ADR template.
   - **Verification:** `openspec-lint` integrity check resolves cross-references from `tech.md`.
 
@@ -241,7 +241,7 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
   - **Acceptance:** `gh api repos/rinzler78/Here.Sdk.Common/environments/nuget-production --input <(<json>)` returns 200; `protection_rules.required_reviewers` non-empty; `deployment_branch_policy.custom_branch_policies` restricted to `master`.
   - **Verification:** `nuget-publish.yml` references `environment: nuget-production` and requires approval before publishing.
 
-- [ ] 9.6 Implement `build/setup-github.sh` + `.ps1` idempotent (covers both the Git bootstrap hand-off and the GitHub provisioning).
+- [x] 9.6 Implement `build/setup-github.sh` + `.ps1` idempotent (covers both the Git bootstrap hand-off and the GitHub provisioning).
   - **Acceptance:** the script performs — idempotently and in this order — (a) ensure `git init` has run (preconditioned by §1.0, no-op otherwise), (b) ensure a `master` commit exists and `git push origin master`, (c) `gh repo create rinzler78/Here.Sdk.Common --public …` if the remote is absent, (d) create `develop` from `master`, push, and set as default via `gh repo edit --default-branch develop`, (e) creates/updates repo settings, Rulesets, secrets, environment, Dependabot; re-running reports `No changes applied` and exits 0.
   - **Verification:** run the script twice; diff of observed settings before vs. after second run = no diff; `gh api repos/rinzler78/Here.Sdk.Common --jq .default_branch` returns `develop`; `git ls-remote origin` lists both `refs/heads/master` and `refs/heads/develop`.
 

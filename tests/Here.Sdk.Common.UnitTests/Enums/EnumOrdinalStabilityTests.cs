@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Here.Sdk.Common.Common;
+using Here.Sdk.Common.Geography;
 using Here.Sdk.Common.Ev;
 using Here.Sdk.Common.Map;
 using Here.Sdk.Common.Navigation;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Exporters.Json;
 using BenchmarkDotNet.Jobs;
 using Here.Sdk.Common.Geography;
 
@@ -8,7 +9,7 @@ namespace Here.Sdk.Common.Benchmarks;
 /// <summary>Hot-path benchmarks for geography types.</summary>
 [SimpleJob(RuntimeMoniker.Net80)]
 [MemoryDiagnoser]
-[DisassemblyDiagnoser(maxDepth: 2)]
+[JsonExporter(fileNameSuffix: "-brief", indentJson: true, excludeMeasurements: true)]
 public class GeographyBenchmarks
 {
     private static readonly GeoCoordinates Paris = new(48.8566, 2.3522);
