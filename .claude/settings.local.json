@@ -14,7 +14,7 @@
       "Bash(rtk dotnet *)",
       "Bash(git add *)",
       "Bash(git commit -m 'chore: bootstrap repository structure *)",
-      "Bash(git checkout *)"
+      "Bash(git *)"
     ]
   }
 }
