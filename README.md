@@ -1,25 +1,25 @@
-# Here.Sdk.Premium.Common
+# Here.Sdk.Common
 
-[![NuGet](https://img.shields.io/nuget/v/Here.Sdk.Premium.Common.svg)](https://www.nuget.org/packages/Here.Sdk.Premium.Common)
-[![CI](https://github.com/rinzler78/Here.Sdk.Premium.Common/actions/workflows/ci.yml/badge.svg)](https://github.com/rinzler78/Here.Sdk.Premium.Common/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Here.Sdk.Common.svg)](https://www.nuget.org/packages/Here.Sdk.Common)
+[![CI](https://github.com/rinzler78/Here.Sdk.Common/actions/workflows/ci.yml/badge.svg)](https://github.com/rinzler78/Here.Sdk.Common/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Zero-dependency primitive value objects, enums, and exceptions for the `Here.Sdk.Premium.*` ecosystem.
+Zero-dependency primitive value objects, enums, and exceptions for the `Here.Sdk.*` ecosystem.
 
 > **Community project** — not affiliated with HERE Technologies.
 
 ## Installation
 
 ```sh
-dotnet add package Here.Sdk.Premium.Common
+dotnet add package Here.Sdk.Common
 ```
 
 ## Quick Start
 
 ```csharp
-using Here.Sdk.Premium.Common.Geography;
-using Here.Sdk.Premium.Common.Units;
-using Here.Sdk.Premium.Common.Errors;
+using Here.Sdk.Common.Geography;
+using Here.Sdk.Common.Units;
+using Here.Sdk.Common.Errors;
 
 // Geographic coordinates (WGS84)
 var paris = new GeoCoordinates(48.8566, 2.3522);
@@ -64,7 +64,7 @@ catch (HereRateLimitedException ex)
 
 ## Credentials
 
-No HERE credentials are required to use this package. Credentials are needed by downstream `Here.Sdk.Premium.Core` packages. See [docs/credentials-setup.md](docs/credentials-setup.md).
+No HERE credentials are required to use this package. Credentials are needed by downstream `Here.Sdk.Core` packages. See [docs/credentials-setup.md](docs/credentials-setup.md).
 
 ## Documentation
 

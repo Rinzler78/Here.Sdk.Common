@@ -25,7 +25,7 @@ jobs:
           dotnet build -c Release --no-restore
 
       - name: Pack
-        run: dotnet pack src/Here.Sdk.Premium.Common -c Release --no-build -o artifacts/packages
+        run: dotnet pack src/Here.Sdk.Common -c Release --no-build -o artifacts/packages
 
       - name: Push to NuGet
         env:

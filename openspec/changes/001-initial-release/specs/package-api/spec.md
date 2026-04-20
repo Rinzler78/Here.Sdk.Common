@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: `GeoCoordinates` immutable value object with WGS84 validation
-The system SHALL provide `public readonly record struct GeoCoordinates(double Latitude, double Longitude, double? Altitude = null)` under namespace `Here.Sdk.Premium.Common.Geography` that validates WGS84 ranges in the primary constructor.
+The system SHALL provide `public readonly record struct GeoCoordinates(double Latitude, double Longitude, double? Altitude = null)` under namespace `Here.Sdk.Common.Geography` that validates WGS84 ranges in the primary constructor.
 
 #### Scenario: Valid latitude and longitude are stored as-is
 - **WHEN** a consumer constructs `new GeoCoordinates(48.8566, 2.3522)`
@@ -83,7 +83,7 @@ The system SHALL provide `public static class FlexiblePolyline` with `Encode(IEn
 
 
 ### Requirement: `Distance`, `Duration`, `Speed` unit value objects
-The system SHALL provide under `Here.Sdk.Premium.Common.Units`:
+The system SHALL provide under `Here.Sdk.Common.Units`:
 - `public readonly record struct Distance(double Meters)` with `Zero`, `FromKilometers(double)`, `FromMiles(double)`, `ToKilometers()`, `ToMiles()`, arithmetic operators `+`, `-`, `*` (scalar).
 - `public readonly record struct Duration(TimeSpan Value)` wrapping `TimeSpan`.
 - `public readonly record struct Speed(double MetersPerSecond)` with `ToKph()`, `ToMph()`.
@@ -102,7 +102,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Units`:
 
 
 ### Requirement: `HereErrorCode` enum and `HereException` hierarchy
-The system SHALL provide under `Here.Sdk.Premium.Common.Errors`:
+The system SHALL provide under `Here.Sdk.Common.Errors`:
 - `public enum HereErrorCode { None, NetworkFailure, AuthenticationFailure, InvalidRequest, NotFound, RateLimited, QuotaExceeded, Timeout, Cancelled, Unknown }`.
 - `public class HereException : Exception { public HereErrorCode Code { get; } }`.
 - `public sealed class HereNetworkException : HereException`.
@@ -140,7 +140,7 @@ The system SHALL expose all reference-type members with explicit nullability ann
 
 
 ### Requirement: Geometry — `GeoCircle`, `GeoPolygon`, `GeoCorridor`, `GeoOrientation`
-The system SHALL provide under `Here.Sdk.Premium.Common.Geography`:
+The system SHALL provide under `Here.Sdk.Common.Geography`:
 - `public readonly record struct GeoCircle(GeoCoordinates Center, double RadiusInMeters)` — validates `RadiusInMeters >= 0`.
 - `public sealed record GeoPolygon(IReadOnlyList<GeoCoordinates> Vertices)` — validates at least 3 vertices; vertices form a closed ring.
 - `public sealed record GeoCorridor(GeoPolyline Polyline, int HalfWidthInMeters)` — validates `HalfWidthInMeters >= 0`.
@@ -156,7 +156,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Geography`:
 
 
 ### Requirement: 2D/3D geometry value objects
-The system SHALL provide under `Here.Sdk.Premium.Common.Geometry`:
+The system SHALL provide under `Here.Sdk.Common.Geometry`:
 - `public readonly record struct Point2D(double X, double Y)`.
 - `public readonly record struct Point3D(double X, double Y, double Z)`.
 - `public readonly record struct Anchor2D(double HorizontalOffset, double VerticalOffset)` — offsets in `[0, 1]` range representing normalised 2D coordinates.
@@ -176,7 +176,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Geometry`:
 
 
 ### Requirement: `Location` value record
-The system SHALL provide `public sealed record Location` in `Here.Sdk.Premium.Common.Positioning` with:
+The system SHALL provide `public sealed record Location` in `Here.Sdk.Common.Positioning` with:
 - **Required:** `GeoCoordinates Coordinates`, `DateTimeOffset Timestamp`.
 - **Optional:** `double? BearingInDegrees`, `double? SpeedInMetersPerSecond`, `double? HorizontalAccuracyInMeters`, `double? VerticalAccuracyInMeters`, `double? BearingAccuracyInDegrees`, `double? SpeedAccuracyInMetersPerSecond`, `double? AltitudeAccuracyInMeters`.
 
@@ -190,7 +190,7 @@ The system SHALL provide `public sealed record Location` in `Here.Sdk.Premium.Co
 
 
 ### Requirement: Localisation value objects
-The system SHALL provide under `Here.Sdk.Premium.Common.Localisation`:
+The system SHALL provide under `Here.Sdk.Common.Localisation`:
 - `public readonly record struct LanguageCode(string Value)` — wraps ISO 639-1/639-3 language tag; validates non-empty.
 - `public readonly record struct CountryCode(string Value)` — wraps ISO 3166-1 alpha-3; validates non-empty.
 - `public sealed record LocalizedText(string Text, LanguageCode Language)`.
@@ -206,7 +206,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Localisation`:
 
 
 ### Requirement: Identifier value objects
-The system SHALL provide under `Here.Sdk.Premium.Common.Identifiers`:
+The system SHALL provide under `Here.Sdk.Common.Identifiers`:
 - `public readonly record struct NameId(string Name, string Id)` — both non-empty.
 - `public readonly record struct ExternalId(string Provider, string Id)` — both non-empty; `Provider` identifies the authority (e.g., `"here_place_id"`, `"wikidata"`).
 
@@ -216,7 +216,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Identifiers`:
 
 
 ### Requirement: `UnitSystem` and `CardinalDirection` enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Units`:
+The system SHALL provide under `Here.Sdk.Common.Units`:
 - `public enum UnitSystem { Metric, Imperial }`.
 - `public enum CardinalDirection { North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest }`.
 
@@ -226,7 +226,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Units`:
 
 
 ### Requirement: Transport-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Transport`:
+The system SHALL provide under `Here.Sdk.Common.Transport`:
 - `public enum TransportMode { Car, Truck, Pedestrian, Bicycle, Scooter, Taxi, Bus, PrivateBus, Ferry }` — supersedes the same enum currently drafted in Abstractions; Abstractions SHALL reference Common.
 - `public enum VehicleType { Car, Truck, Bus, Motorcycle, Bicycle, Pedestrian }`.
 - `public enum TruckType { Straight, Tractor }`.
@@ -243,7 +243,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Transport`:
 
 
 ### Requirement: Routing-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Routing`:
+The system SHALL provide under `Here.Sdk.Common.Routing`:
 - `public enum WaypointType { StopOver, PassThrough }`.
 - `public enum OptimizationMode { Fastest, Shortest }`.
 - `public enum ManeuverAction { Depart, Arrive, LeftUTurn, SharpLeftTurn, LeftTurn, SlightLeftTurn, Continue, SlightRightTurn, RightTurn, SharpRightTurn, RightUTurn, RoundaboutEnter, RoundaboutPass, RoundaboutExit51, RoundaboutExit52, RoundaboutExit53, RoundaboutExit54, RoundaboutExit55, RoundaboutExit56, RoundaboutExit57, RoundaboutExit58, RoundaboutExit59, RoundaboutExit510, RoundaboutExit511, RoundaboutExit512, Ferry, EnterHighway, LeaveHighway, BorderCrossing }` — mirrors `ManeuverAction` from HERE SDK.
@@ -261,7 +261,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Routing`:
 
 
 ### Requirement: Search-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Search`:
+The system SHALL provide under `Here.Sdk.Common.Search`:
 - `public enum PlaceType { Unknown, Area, Locality, Street, HouseNumber, PointOfInterest }`.
 - `public enum AddressType { Unknown, Point, HouseNumber, Street, PostalCode, LocalityLevel1, LocalityLevel2, LocalityLevel3, Country }`.
 - `public enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }`.
@@ -274,7 +274,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Search`:
 
 
 ### Requirement: Navigation-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Navigation`:
+The system SHALL provide under `Here.Sdk.Common.Navigation`:
 - `public enum MilestoneType { StopOver, PassThrough, Waypoint, Destination }`.
 - `public enum MilestoneStatus { Reached, Passed }`.
 - `public enum SpeedWarningStatus { SpeedLimitExceeded, SpeedLimitRestored }`.
@@ -290,7 +290,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Navigation`:
 
 
 ### Requirement: Traffic-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Traffic`:
+The system SHALL provide under `Here.Sdk.Common.Traffic`:
 - `public enum TrafficIncidentType { Unknown, Accident, Congestion, DisabledVehicle, MassTransit, Miscellaneous, OtherNews, PlannedEvent, RoadHazard, Construction, LaneRestriction, Weather }`.
 - `public enum TrafficIncidentImpact { Unknown, Critical, Major, Minor, LowImpact }`.
 
@@ -300,7 +300,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Traffic`:
 
 
 ### Requirement: Positioning-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Positioning`:
+The system SHALL provide under `Here.Sdk.Common.Positioning`:
 - `public enum LocationAccuracy { NavigationAccuracy, BestAvailable, BalancedPowerAccuracy, LowPowerAccuracy }`.
 
 #### Scenario: Default accuracy
@@ -309,7 +309,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Positioning`:
 
 
 ### Requirement: EV-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Ev`:
+The system SHALL provide under `Here.Sdk.Common.Ev`:
 - `public enum EvChargingConnectorFormat { Socket, Cable }`.
 - `public enum EvseState { Available, Blocked, Charging, Inoperative, OutOfOrder, Planned, Removed, Reserved, Unknown }`.
 
@@ -319,7 +319,7 @@ The system SHALL provide under `Here.Sdk.Premium.Common.Ev`:
 
 
 ### Requirement: Map-domain enums
-The system SHALL provide under `Here.Sdk.Premium.Common.Map`:
+The system SHALL provide under `Here.Sdk.Common.Map`:
 - `public enum MapScheme { NormalDay, NormalNight, SatelliteDay, HybridDay, HybridNight, LiteDay, LiteNight, LiteHybridDay }`.
 - `public enum LineCap { Butt, Round, Square }`.
 - `public enum VisibilityState { Visible, Hidden }`.

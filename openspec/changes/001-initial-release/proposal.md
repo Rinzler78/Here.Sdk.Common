@@ -1,8 +1,8 @@
-# Change — Create Here.Sdk.Premium.Common v1.0 (initial release)
+# Change — Create Here.Sdk.Common v1.0 (initial release)
 
 ---
 id: 001-initial-release
-title: Create Here.Sdk.Premium.Common v1.0 (initial release)
+title: Create Here.Sdk.Common v1.0 (initial release)
 status: draft
 author: "@rinzler78"
 reviewers: []
@@ -21,13 +21,13 @@ semver-impact: MINOR
 
 ## Why
 
-The `Here.Sdk.Premium.*` ecosystem is a community-maintained wrapper around the HERE SDK 4.x Navigate Edition for Xamarin.Forms 5 and .NET MAUI 8 consumers. The prior HERE Premium Mobile SDK v3 reached end-of-life on 2025-12-15, leaving no maintained .NET surface. Every downstream package in the ecosystem (`Abstractions`, `Core`, `Bindings.*`, `Android`, `iOS`, `Forms`) needs a shared vocabulary of primitive value objects, units, and errors; publishing those primitives in a dedicated zero-dependency package avoids duplication, locks invariants (WGS84 lat/lon bounds, bearing normalisation, distance units) in the type system, and keeps the other packages lean. This proposal authorises the creation of `Here.Sdk.Premium.Common` v1.0 and establishes the quality bar every subsequent proposal in this repo inherits.
+The `Here.Sdk.*` ecosystem is a community-maintained wrapper around the HERE SDK 4.x Navigate Edition for Xamarin.Forms 5 and .NET MAUI 8 consumers. The prior HERE Premium Mobile SDK v3 reached end-of-life on 2025-12-15, leaving no maintained .NET surface. Every downstream package in the ecosystem (`Abstractions`, `Core`, `Bindings.*`, `Android`, `iOS`, `Forms`) needs a shared vocabulary of primitive value objects, units, and errors; publishing those primitives in a dedicated zero-dependency package avoids duplication, locks invariants (WGS84 lat/lon bounds, bearing normalisation, distance units) in the type system, and keeps the other packages lean. This proposal authorises the creation of `Here.Sdk.Common` v1.0 and establishes the quality bar every subsequent proposal in this repo inherits.
 
 ## What changes
 
-- **ADDED** `Here.Sdk.Premium.Common.Geography` — `GeoCoordinates`, `GeoBoundingBox`, `GeoPolyline`, `GeoBearing` as immutable records; `FlexiblePolyline` static encoder/decoder; `EarthConstants`.
-- **ADDED** `Here.Sdk.Premium.Common.Units` — `Distance`, `Duration`, `Speed` records with idiomatic conversions and enums `DistanceUnit`, `SpeedUnit`.
-- **ADDED** `Here.Sdk.Premium.Common.Errors` — `HereErrorCode` enum, `HereException` base + specialised subtypes (`HereNetworkException`, `HereAuthenticationException`, `HereRateLimitedException`, `HereInvalidRequestException`).
+- **ADDED** `Here.Sdk.Common.Geography` — `GeoCoordinates`, `GeoBoundingBox`, `GeoPolyline`, `GeoBearing` as immutable records; `FlexiblePolyline` static encoder/decoder; `EarthConstants`.
+- **ADDED** `Here.Sdk.Common.Units` — `Distance`, `Duration`, `Speed` records with idiomatic conversions and enums `DistanceUnit`, `SpeedUnit`.
+- **ADDED** `Here.Sdk.Common.Errors` — `HereErrorCode` enum, `HereException` base + specialised subtypes (`HereNetworkException`, `HereAuthenticationException`, `HereRateLimitedException`, `HereInvalidRequestException`).
 - **ADDED** testing strategy (90 % global + per-file coverage; test pyramid; determinism rules).
 - **ADDED** coding principles (Clean Code, Clean Architecture layer rules as they apply to `Common`, SOLID with concrete patterns, DDD-lite value objects).
 - **ADDED** performance budget (binary size ≤ 100 KB, `GeoCoordinates.DistanceTo` ≤ 50 ns zero-alloc, `FlexiblePolyline.Decode(1000 pts)` ≤ 5 ms).
@@ -50,7 +50,7 @@ The `Here.Sdk.Premium.*` ecosystem is a community-maintained wrapper around the 
 ### Affected consumers
 
 - **External:** new public package; no existing consumers affected.
-- **Internal (downstream siblings):** `Here.Sdk.Premium.Abstractions` will depend on this package. Its own initial-release proposal will declare the dependency.
+- **Internal (downstream siblings):** `Here.Sdk.Abstractions` will depend on this package. Its own initial-release proposal will declare the dependency.
 
 ### SemVer implications
 
@@ -58,7 +58,7 @@ The `Here.Sdk.Premium.*` ecosystem is a community-maintained wrapper around the 
 
 ### Affected repos in the ecosystem
 
-- `Here.Sdk.Premium.Common` (this repo).
+- `Here.Sdk.Common` (this repo).
 - Downstream consumers (`Abstractions`, `Core`, `Android`, `iOS`, `Forms`, `Bindings.Android`, `Bindings.iOS`) will add a `PackageReference` to this package in their own initial-release proposals.
 
 ## Alternatives considered
@@ -67,14 +67,14 @@ The `Here.Sdk.Premium.*` ecosystem is a community-maintained wrapper around the 
 - **B — Use existing geography library (NetTopologySuite, Geo).** Rejected: those targets are GIS-heavy with heavy dependencies; `Common` needs ≤ 100 KB binary size and zero deps.
 - **C — Embed WGS84 constants in each downstream package.** Rejected: duplication risks divergence; centralising them in `Common` with invariants at construction is the Clean Code value-object prescription.
 
-**Chosen:** dedicated zero-dep `Here.Sdk.Premium.Common` package.
+**Chosen:** dedicated zero-dep `Here.Sdk.Common` package.
 
 ## Out of scope
 
-- REST client — belongs to `Here.Sdk.Premium.Core`.
+- REST client — belongs to `Here.Sdk.Core`.
 - Platform-specific types — belong to `Bindings.*` and platform wrappers.
-- UI primitives — belong to `Here.Sdk.Premium.Forms`.
-- `IObservable<T>` contracts — belong to `Here.Sdk.Premium.Abstractions`.
+- UI primitives — belong to `Here.Sdk.Forms`.
+- `IObservable<T>` contracts — belong to `Here.Sdk.Abstractions`.
 - Magnetic-declination helpers — deferred to a future proposal.
 - Localisation of error messages — HERE SDK messages stay in English; consumers localise.
 
@@ -86,4 +86,4 @@ The `Here.Sdk.Premium.*` ecosystem is a community-maintained wrapper around the 
 ## Related
 
 - First ADR set authored by this proposal: ADR-0001 through ADR-0005 under `docs/architecture/decision-records/`.
-- Sibling proposals to follow: `Here.Sdk.Premium.Abstractions/changes/001-initial-release/`, `Here.Sdk.Premium.Core/changes/001-initial-release/`, etc.
+- Sibling proposals to follow: `Here.Sdk.Abstractions/changes/001-initial-release/`, `Here.Sdk.Core/changes/001-initial-release/`, etc.

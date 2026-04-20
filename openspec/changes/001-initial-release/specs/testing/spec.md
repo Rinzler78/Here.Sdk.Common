@@ -55,7 +55,7 @@ The system SHALL mark every test requiring HERE credentials with `[SkippableFact
 
 
 ### Requirement: Test organisation and naming
-The system SHALL organise tests under `tests/Here.Sdk.Premium.Common.UnitTests/` with one test class per source class, named `Method_Condition_ExpectedOutcome` for every method.
+The system SHALL organise tests under `tests/Here.Sdk.Common.UnitTests/` with one test class per source class, named `Method_Condition_ExpectedOutcome` for every method.
 
 #### Scenario: Every public source member has at least one test
 - **WHEN** the package is built
@@ -83,7 +83,7 @@ The system SHALL exclude pure enum files (files containing only `enum` declarati
 
 
 ### Requirement: Ordinal stability tests for all stable enums
-The system SHALL provide, in `tests/Here.Sdk.Premium.Common.UnitTests/Enums/`, one test class per enum that asserts the ordinal values of the first member and any documented stable sentinel members.
+The system SHALL provide, in `tests/Here.Sdk.Common.UnitTests/Enums/`, one test class per enum that asserts the ordinal values of the first member and any documented stable sentinel members.
 
 #### Scenario: First member ordinal asserted
 - **WHEN** the test suite runs

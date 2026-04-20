@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Binary size budget ≤ 100 KB for the compressed `.nupkg`
-The system SHALL keep the Release `Here.Sdk.Premium.Common.<version>.nupkg` under 100 KB. CI SHALL measure and fail if exceeded by more than 5 %.
+The system SHALL keep the Release `Here.Sdk.Common.<version>.nupkg` under 100 KB. CI SHALL measure and fail if exceeded by more than 5 %.
 
 #### Scenario: Package exceeds budget
 - **WHEN** a PR produces a `.nupkg` larger than 105 KB
@@ -15,7 +15,7 @@ The system SHALL keep the Release `Here.Sdk.Premium.Common.<version>.nupkg` unde
 
 
 ### Requirement: Hot-path allocation budgets declared and enforced
-The system SHALL annotate every hot path with `// PERF: hot path` in code and document the allocation budget + target mean time in the XML doc `<remarks>`. A BenchmarkDotNet baseline SHALL exist under `tests/Here.Sdk.Premium.Common.Benchmarks/baselines/<method>.baseline.json`.
+The system SHALL annotate every hot path with `// PERF: hot path` in code and document the allocation budget + target mean time in the XML doc `<remarks>`. A BenchmarkDotNet baseline SHALL exist under `tests/Here.Sdk.Common.Benchmarks/baselines/<method>.baseline.json`.
 
 #### Scenario: GeoCoordinates.DistanceTo meets budget
 - **WHEN** `GeoCoordinatesBenchmarks.DistanceTo_Haversine` runs on a modern machine

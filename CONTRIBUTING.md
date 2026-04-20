@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to Here.Sdk.Premium.Common!
+Thank you for your interest in contributing to Here.Sdk.Common!
 
 ## Workflow
 
@@ -22,7 +22,7 @@ Thank you for your interest in contributing to Here.Sdk.Premium.Common!
 ## Tests
 
 ```sh
-dotnet test tests/Here.Sdk.Premium.Common.UnitTests
+dotnet test tests/Here.Sdk.Common.UnitTests
 ```
 
 ## License

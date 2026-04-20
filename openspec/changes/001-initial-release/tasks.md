@@ -147,7 +147,7 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 4. Tests and quality gates
 
-- [ ] 4.1 Author `tests/Here.Sdk.Premium.Common.UnitTests/` with xUnit + FluentAssertions + coverlet.collector.
+- [ ] 4.1 Author `tests/Here.Sdk.Common.UnitTests/` with xUnit + FluentAssertions + coverlet.collector.
   - **Acceptance:** project builds under all TFMs; `dotnet test` discovers and runs ≥ 1 test.
   - **Verification:** CI `build-netstandard` job green.
   - **Coverage:** see individual tasks; aggregate repo coverage ≥ 90 % line + 90 % branch + 95 % method.
@@ -170,7 +170,7 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 5. Performance
 
-- [ ] 5.1 Author `tests/Here.Sdk.Premium.Common.Benchmarks/` with BenchmarkDotNet.
+- [ ] 5.1 Author `tests/Here.Sdk.Common.Benchmarks/` with BenchmarkDotNet.
   - **Acceptance:** project builds; `[MemoryDiagnoser]` attributes set; baselines folder exists.
   - **Verification:** `dotnet run -c Release --project tests/…Benchmarks/` completes.
 
@@ -221,16 +221,16 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 9. GitHub provisioning (public repo + NuGet key)
 
-- [ ] 9.1 Generate a NuGet.org API key **scoped to `Here.Sdk.Premium.Common` only**, action `Push new packages and package versions`, expiry 365 days.
-  - **Acceptance:** on `https://www.nuget.org/account/apikeys`, the key's `Selected Packages` list contains exactly `Here.Sdk.Premium.Common`.
-  - **Verification:** paste the full key into `gh secret set NUGET_API_KEY -b - -R rinzler78/Here.Sdk.Premium.Common`; `gh secret list -R rinzler78/Here.Sdk.Premium.Common` shows `NUGET_API_KEY`.
+- [ ] 9.1 Generate a NuGet.org API key **scoped to `Here.Sdk.Common` only**, action `Push new packages and package versions`, expiry 365 days.
+  - **Acceptance:** on `https://www.nuget.org/account/apikeys`, the key's `Selected Packages` list contains exactly `Here.Sdk.Common`.
+  - **Verification:** paste the full key into `gh secret set NUGET_API_KEY -b - -R rinzler78/Here.Sdk.Common`; `gh secret list -R rinzler78/Here.Sdk.Common` shows `NUGET_API_KEY`.
 
 - [ ] 9.2 Create the public GitHub repository under `rinzler78`.
-  - **Acceptance:** `gh repo create rinzler78/Here.Sdk.Premium.Common --public --description "<from project.md>" --homepage "https://www.nuget.org/packages/Here.Sdk.Premium.Common" --disable-wiki` succeeds; Discussions enabled via `gh api -X PATCH repos/rinzler78/Here.Sdk.Premium.Common -F has_discussions=true`.
-  - **Verification:** `gh repo view rinzler78/Here.Sdk.Premium.Common --json visibility,hasWikiEnabled,hasDiscussionsEnabled` returns `PUBLIC`, `false`, `true`.
+  - **Acceptance:** `gh repo create rinzler78/Here.Sdk.Common --public --description "<from project.md>" --homepage "https://www.nuget.org/packages/Here.Sdk.Common" --disable-wiki` succeeds; Discussions enabled via `gh api -X PATCH repos/rinzler78/Here.Sdk.Common -F has_discussions=true`.
+  - **Verification:** `gh repo view rinzler78/Here.Sdk.Common --json visibility,hasWikiEnabled,hasDiscussionsEnabled` returns `PUBLIC`, `false`, `true`.
 
 - [ ] 9.3 Configure repository topics.
-  - **Acceptance:** topics set to `here`, `maps`, `nuget`, `dotnet`, `xamarin`, `maui`, `csharp` via `gh api -X PUT repos/rinzler78/Here.Sdk.Premium.Common/topics --input <(echo '{"names":["here","maps","nuget","dotnet","xamarin","maui","csharp"]}')`.
+  - **Acceptance:** topics set to `here`, `maps`, `nuget`, `dotnet`, `xamarin`, `maui`, `csharp` via `gh api -X PUT repos/rinzler78/Here.Sdk.Common/topics --input <(echo '{"names":["here","maps","nuget","dotnet","xamarin","maui","csharp"]}')`.
   - **Verification:** `gh repo view --json repositoryTopics` lists the 7 topics.
 
 - [ ] 9.4 Apply branch-protection Rulesets on `master` and `develop` via `build/setup-github.sh`.
@@ -238,12 +238,12 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
   - **Verification:** manual test push to `master` rejected with ruleset violation; `gh api repos/.../rulesets` returns the expected JSON.
 
 - [ ] 9.5 Create `nuget-production` GitHub Environment with required reviewers and `master`-only deployment.
-  - **Acceptance:** `gh api repos/rinzler78/Here.Sdk.Premium.Common/environments/nuget-production --input <(<json>)` returns 200; `protection_rules.required_reviewers` non-empty; `deployment_branch_policy.custom_branch_policies` restricted to `master`.
+  - **Acceptance:** `gh api repos/rinzler78/Here.Sdk.Common/environments/nuget-production --input <(<json>)` returns 200; `protection_rules.required_reviewers` non-empty; `deployment_branch_policy.custom_branch_policies` restricted to `master`.
   - **Verification:** `nuget-publish.yml` references `environment: nuget-production` and requires approval before publishing.
 
 - [ ] 9.6 Implement `build/setup-github.sh` + `.ps1` idempotent (covers both the Git bootstrap hand-off and the GitHub provisioning).
-  - **Acceptance:** the script performs — idempotently and in this order — (a) ensure `git init` has run (preconditioned by §1.0, no-op otherwise), (b) ensure a `master` commit exists and `git push origin master`, (c) `gh repo create rinzler78/Here.Sdk.Premium.Common --public …` if the remote is absent, (d) create `develop` from `master`, push, and set as default via `gh repo edit --default-branch develop`, (e) creates/updates repo settings, Rulesets, secrets, environment, Dependabot; re-running reports `No changes applied` and exits 0.
-  - **Verification:** run the script twice; diff of observed settings before vs. after second run = no diff; `gh api repos/rinzler78/Here.Sdk.Premium.Common --jq .default_branch` returns `develop`; `git ls-remote origin` lists both `refs/heads/master` and `refs/heads/develop`.
+  - **Acceptance:** the script performs — idempotently and in this order — (a) ensure `git init` has run (preconditioned by §1.0, no-op otherwise), (b) ensure a `master` commit exists and `git push origin master`, (c) `gh repo create rinzler78/Here.Sdk.Common --public …` if the remote is absent, (d) create `develop` from `master`, push, and set as default via `gh repo edit --default-branch develop`, (e) creates/updates repo settings, Rulesets, secrets, environment, Dependabot; re-running reports `No changes applied` and exits 0.
+  - **Verification:** run the script twice; diff of observed settings before vs. after second run = no diff; `gh api repos/rinzler78/Here.Sdk.Common --jq .default_branch` returns `develop`; `git ls-remote origin` lists both `refs/heads/master` and `refs/heads/develop`.
 
 - [ ] 9.7 Author `docs/credentials-setup.md` covering `NUGET_API_KEY` (how to generate package-scoped, how to register via `gh secret set`, how to rotate every 365 days).
   - **Acceptance:** the doc includes exact `gh` and nuget.org commands + a rotation procedure with a reminder issue opened at day 330.
@@ -251,17 +251,17 @@ Although GitHub-provisioning tasks are grouped later for traceability, the inten
 
 ## 10. Release preparation
 
-- [ ] 10.1 Use a single Conventional Commit when the implementation lands: `feat: initial Here.Sdk.Premium.Common v0.1.0-alpha.1 implementation`.
+- [ ] 10.1 Use a single Conventional Commit when the implementation lands: `feat: initial Here.Sdk.Common v0.1.0-alpha.1 implementation`.
   - **Acceptance:** Release Please proposes a prerelease PR; once stable, `feat!:` commit promotes to `1.0.0`.
   - **Verification:** Release Please preview in PR description matches expected bump.
 
 - [ ] 10.2 Once stable, merge the Release Please PR on `master` → tag `v1.0.0` → GitHub Release → `nuget-publish.yml` pushes to nuget.org.
   - **Acceptance:** package visible on nuget.org with version `1.0.0`, license `MIT`, repository URL correct, README rendered.
-  - **Verification:** external consumer adds `<PackageReference Include="Here.Sdk.Premium.Common" Version="1.0.0" />` and uses `GeoCoordinates` successfully.
+  - **Verification:** external consumer adds `<PackageReference Include="Here.Sdk.Common" Version="1.0.0" />` and uses `GeoCoordinates` successfully.
 
 ## Summary
 
 - **Total tasks:** 49 (phases 1 – 10).
 - **Est. effort:** ~5 days of focused work (bootstrap + public types including full HERE SDK vocabulary + tests + scripts + workflows + docs + GitHub provisioning + NuGet key).
 - **Blocked by:** none.
-- **Blocks:** downstream sibling `Here.Sdk.Premium.Abstractions/changes/001-initial-release/`.
+- **Blocks:** downstream sibling `Here.Sdk.Abstractions/changes/001-initial-release/`.

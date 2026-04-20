@@ -4,7 +4,7 @@
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
-Report vulnerabilities privately via GitHub's [Security Advisories](https://github.com/rinzler78/Here.Sdk.Premium.Common/security/advisories/new) feature.
+Report vulnerabilities privately via GitHub's [Security Advisories](https://github.com/rinzler78/Here.Sdk.Common/security/advisories/new) feature.
 
 We aim to acknowledge reports within 48 hours and provide a fix within 14 days for critical issues.
 

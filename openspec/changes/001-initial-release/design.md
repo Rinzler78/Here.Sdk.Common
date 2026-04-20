@@ -1,8 +1,8 @@
-# Design — 001-initial-release — Here.Sdk.Premium.Common
+# Design — 001-initial-release — Here.Sdk.Common
 
 ## Context
 
-`Common` is a new, zero-dependency .NET Standard / .NET library that underpins the whole `Here.Sdk.Premium.*` ecosystem. It hosts the primitive vocabulary shared by every downstream package (`Abstractions`, `Core`, `Android`, `iOS`, `Forms`, `Bindings.*`). The prior HERE Premium Mobile SDK v3 is end-of-life; the new target is HERE SDK 4.x Navigate Edition, whose data model informs the ubiquitous language used here.
+`Common` is a new, zero-dependency .NET Standard / .NET library that underpins the whole `Here.Sdk.*` ecosystem. It hosts the primitive vocabulary shared by every downstream package (`Abstractions`, `Core`, `Android`, `iOS`, `Forms`, `Bindings.*`). The prior HERE Premium Mobile SDK v3 is end-of-life; the new target is HERE SDK 4.x Navigate Edition, whose data model informs the ubiquitous language used here.
 
 ## Chosen approach
 
@@ -28,7 +28,7 @@
 
 ## Performance considerations
 
-Hot paths annotated with `// PERF: hot path` and backed by BenchmarkDotNet baselines under `tests/Here.Sdk.Premium.Common.Benchmarks/baselines/`:
+Hot paths annotated with `// PERF: hot path` and backed by BenchmarkDotNet baselines under `tests/Here.Sdk.Common.Benchmarks/baselines/`:
 
 - `GeoCoordinates.DistanceTo(GeoCoordinates)` — Haversine formula; target ≤ 50 ns, 0 allocations.
 - `GeoBearing(double)` constructor — target ≤ 5 ns, 0 allocations.
@@ -64,7 +64,7 @@ First public release. Rollout strategy:
 3. Release Please opens the PR on `master`; merging the PR creates tag `v1.0.0` and triggers `nuget-publish.yml`.
 4. Downstream sibling packages bump their `PackageReference` to `[1.0.0, 2.0.0)`.
 
-Rollback path: `dotnet nuget delete Here.Sdk.Premium.Common <version>` within the 72 h window nuget.org permits deletions. Past that, publish a patch revoking the bad surface via `[Obsolete]` with a deprecation message.
+Rollback path: `dotnet nuget delete Here.Sdk.Common <version>` within the 72 h window nuget.org permits deletions. Past that, publish a patch revoking the bad surface via `[Obsolete]` with a deprecation message.
 
 ## Observability of the proposal itself
 

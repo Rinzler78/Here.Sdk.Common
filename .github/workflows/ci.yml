@@ -60,7 +60,7 @@ jobs:
 
       - name: Pack
         if: matrix.configuration == 'Release'
-        run: dotnet pack src/Here.Sdk.Premium.Common -c Release --no-build -o artifacts/packages
+        run: dotnet pack src/Here.Sdk.Common -c Release --no-build -o artifacts/packages
 
       - name: Binary size check
         if: matrix.configuration == 'Release'

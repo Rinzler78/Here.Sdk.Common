@@ -32,10 +32,10 @@ The system SHALL enforce, via code review and analyzers, that every function:
 
 
 ### Requirement: Clean Architecture — inward dependency rule
-The system SHALL enforce that `Here.Sdk.Premium.Common` has zero runtime dependencies on external NuGet packages and never references `Here.Sdk.Premium.Abstractions`, `Here.Sdk.Premium.Core`, or any downstream sibling. The dependency flow is strictly inward: outer layers depend on inner layers, never the reverse.
+The system SHALL enforce that `Here.Sdk.Common` has zero runtime dependencies on external NuGet packages and never references `Here.Sdk.Abstractions`, `Here.Sdk.Core`, or any downstream sibling. The dependency flow is strictly inward: outer layers depend on inner layers, never the reverse.
 
 #### Scenario: Reference to Abstractions added
-- **WHEN** a PR introduces `<PackageReference Include="Here.Sdk.Premium.Abstractions" … />` in any `Common` csproj
+- **WHEN** a PR introduces `<PackageReference Include="Here.Sdk.Abstractions" … />` in any `Common` csproj
 - **THEN** `build/clean-architecture-check.sh` exits non-zero AND the PR is blocked
 
 #### Scenario: External NuGet dependency added
