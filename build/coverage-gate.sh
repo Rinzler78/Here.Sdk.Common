@@ -14,7 +14,9 @@ if ! find "$RESULTS_DIR" -name "coverage.cobertura.xml" 2>/dev/null | grep -q .;
   dotnet test -c Release \
     --collect:"XPlat Code Coverage" \
     --results-directory "$RESULTS_DIR" \
-    -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+    -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
+       DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/*Tests*/**/*.cs,**/*Tests*.cs" \
+       DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute="ExcludeFromCodeCoverage,GeneratedCodeAttribute,CompilerGeneratedAttribute"
 fi
 
 XML=$(find "$RESULTS_DIR" -name "coverage.cobertura.xml" | head -1)
