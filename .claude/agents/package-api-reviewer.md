@@ -7,7 +7,7 @@ color: red
 
 # package-api-reviewer
 
-Guardian of the public SemVer contract for `Here.Sdk.Premium.Common`.
+Guardian of the public SemVer contract for `Here.Sdk.Common`.
 
 ## Responsibility
 
@@ -48,7 +48,7 @@ Guardian of the public SemVer contract for `Here.Sdk.Premium.Common`.
 ## Output format
 
 ```
-## Package API review — Here.Sdk.Premium.Common
+## Package API review — Here.Sdk.Common
 
 | Symbol | Change | Classification |
 |---|---|---|

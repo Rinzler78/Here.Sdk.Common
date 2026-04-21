@@ -1,0 +1,7 @@
+{
+  "Method": "FlexiblePolyline_Encode_1000Points",
+  "MeanNanoseconds": 11852.20,
+  "AllocatedBytesPerOperation": 16944,
+  "CapturedAt": "2026-04-20",
+  "Note": "Intel Core i9-8950HK, .NET 8.0.18, macOS Sequoia 15.7.5"
+}

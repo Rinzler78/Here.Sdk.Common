@@ -1,4 +1,4 @@
-# Claude Agent Routing — Here.Sdk.Premium.Common
+# Claude Agent Routing — Here.Sdk.Common
 
 Inherits from `~/.ai-governance/AGENTS.md` → `~/.claude/AGENTS.md` → this file.
 

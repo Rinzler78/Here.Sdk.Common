@@ -1,0 +1,22 @@
+﻿{
+  Items: [
+    {
+      Text: Hello,
+      Language: {
+        Value: en
+      }
+    },
+    {
+      Text: Bonjour,
+      Language: {
+        Value: fr
+      }
+    },
+    {
+      Text: Hallo,
+      Language: {
+        Value: de
+      }
+    }
+  ]
+}

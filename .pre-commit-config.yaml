@@ -8,7 +8,7 @@ repos:
       - id: check-json
       - id: check-merge-conflict
       - id: no-commit-to-branch
-        args: [--branch, main, --branch, develop, --pattern, "release/.*"]
+        args: [--branch, master, --branch, develop, --pattern, "release/.*"]
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.4.0

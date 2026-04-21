@@ -1,0 +1,14 @@
+﻿{
+  Coordinates: {
+    Latitude: 48.8566,
+    Longitude: 2.3522
+  },
+  Timestamp: DateTimeOffset_1,
+  BearingInDegrees: 90.0,
+  SpeedInMetersPerSecond: 13.9,
+  HorizontalAccuracyInMeters: 5.0,
+  VerticalAccuracyInMeters: 3.0,
+  BearingAccuracyInDegrees: 2.0,
+  SpeedAccuracyInMetersPerSecond: 0.5,
+  AltitudeAccuracyInMeters: 4.0
+}

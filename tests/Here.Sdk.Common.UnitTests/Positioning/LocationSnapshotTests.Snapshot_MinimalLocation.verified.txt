@@ -1,0 +1,7 @@
+﻿{
+  Coordinates: {
+    Latitude: 48.8566,
+    Longitude: 2.3522
+  },
+  Timestamp: DateTimeOffset_1
+}

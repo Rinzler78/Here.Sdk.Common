@@ -1,4 +1,4 @@
-# Tech — Here.Sdk.Premium.Common
+# Tech — Here.Sdk.Common
 
 ## Stack
 

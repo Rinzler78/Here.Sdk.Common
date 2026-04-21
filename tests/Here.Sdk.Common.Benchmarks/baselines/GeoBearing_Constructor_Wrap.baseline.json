@@ -1,0 +1,7 @@
+{
+  "Method": "GeoBearing_Constructor_Wrap",
+  "MeanNanoseconds": 0.001,
+  "AllocatedBytesPerOperation": 0,
+  "CapturedAt": "2026-04-20",
+  "Note": "Intel Core i9-8950HK, .NET 8.0.18, macOS Sequoia 15.7.5"
+}

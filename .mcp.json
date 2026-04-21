@@ -15,7 +15,7 @@
     },
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/bleclereperso/Projects/Here.Sdk.Premium.Common"]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/bleclereperso/Projects/Here.Sdk.Common"]
     }
   }
 }
