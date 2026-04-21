@@ -3,21 +3,20 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-RESULTS_DIR="artifacts/TestResults"
+RESULTS_DIR="artifacts/TestResults/coverage-gate"
 MIN_LINE=90
 MIN_BRANCH=90
 MIN_METHOD=95
 FAIL=0
 
-# Run tests with coverage if no results exist yet
-if ! find "$RESULTS_DIR" -name "coverage.cobertura.xml" 2>/dev/null | grep -q .; then
-  dotnet test -c Release \
-    --collect:"XPlat Code Coverage" \
-    --results-directory "$RESULTS_DIR" \
-    -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
-       DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/*Tests*/**/*.cs,**/*Tests*.cs" \
-       DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute="ExcludeFromCodeCoverage,GeneratedCodeAttribute,CompilerGeneratedAttribute"
-fi
+# Always regenerate to ensure exclusions are applied correctly
+rm -rf "$RESULTS_DIR"
+dotnet test -c Release \
+  --collect:"XPlat Code Coverage" \
+  --results-directory "$RESULTS_DIR" \
+  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
+     DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/*Tests*/**/*.cs,**/*Tests*.cs" \
+     DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute="ExcludeFromCodeCoverage,GeneratedCodeAttribute,CompilerGeneratedAttribute"
 
 XML=$(find "$RESULTS_DIR" -name "coverage.cobertura.xml" | head -1)
 if [ -z "$XML" ]; then
