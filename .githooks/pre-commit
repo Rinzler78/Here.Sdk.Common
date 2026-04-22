@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Block direct commits on protected branches, then run pre-commit checks.
+# Active via: git config core.hooksPath .githooks
+set -euo pipefail
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+case "$BRANCH" in
+  master|develop|release/*)
+    echo "[branch-guard] REFUSING: direct commit on '$BRANCH' is forbidden." >&2
+    echo "  Create a feature branch: git switch -c feat/<slug>" >&2
+    exit 1
+    ;;
+esac
+
+if command -v pre-commit >/dev/null 2>&1; then
+  exec pre-commit run --hook-stage pre-commit
+fi

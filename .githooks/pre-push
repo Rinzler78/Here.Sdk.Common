@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Block direct pushes to protected branches.
+# stdin: <local-ref> <local-sha> <remote-ref> <remote-sha>
+set -euo pipefail
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/master|refs/heads/develop|refs/heads/release/*)
+      branch="${remote_ref#refs/heads/}"
+      echo "[branch-guard] REFUSING: direct push to '$branch' is forbidden." >&2
+      echo "  Open a PR from your feature branch targeting '$branch'." >&2
+      exit 1
+      ;;
+  esac
+done

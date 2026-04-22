@@ -9,6 +9,10 @@ repos:
       - id: check-merge-conflict
       - id: no-commit-to-branch
         args: [--branch, master, --branch, develop, --pattern, "release/.*"]
+        stages: [pre-commit]
+      - id: no-commit-to-branch
+        args: [--branch, master, --branch, develop, --pattern, "release/.*"]
+        stages: [pre-push]
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.4.0
