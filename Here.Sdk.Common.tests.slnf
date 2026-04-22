@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "Here.Sdk.Common.sln",
+    "projects": [
+      "src\\Here.Sdk.Common\\Here.Sdk.Common.csproj",
+      "tests\\Here.Sdk.Common.UnitTests\\Here.Sdk.Common.UnitTests.csproj",
+      "tests\\Here.Sdk.Common.IntegrationTests\\Here.Sdk.Common.IntegrationTests.csproj",
+      "tests\\Here.Sdk.Common.E2ETests\\Here.Sdk.Common.E2ETests.csproj"
+    ]
+  }
+}

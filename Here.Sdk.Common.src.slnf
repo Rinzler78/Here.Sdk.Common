@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "Here.Sdk.Common.sln",
+    "projects": [
+      "src\\Here.Sdk.Common\\Here.Sdk.Common.csproj"
+    ]
+  }
+}
