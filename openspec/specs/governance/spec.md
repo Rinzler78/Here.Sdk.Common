@@ -64,3 +64,39 @@ The system SHALL rotate CI secrets (`NUGET_API_KEY`, `HERE_ACCESS_KEY_ID`, `HERE
 #### Scenario: Rotation past due
 - **WHEN** a secret's `lastRotatedUtc` is older than 90 days
 - **THEN** the nightly `secret-rotation-check` workflow opens a reminder issue
+
+
+### Requirement: Native branch-guard hooks independent of pre-commit
+The system SHALL ship a `.githooks/` directory containing `pre-commit`, `pre-push`, and `commit-msg` shell scripts. Git SHALL be configured with `core.hooksPath = .githooks` in every clone so hooks activate without requiring `pre-commit` to be installed. The `pre-commit` hook SHALL block commits on `master`, `develop`, and `release/*`. The `pre-push` hook SHALL block direct pushes to those same branches. Both hooks delegate to `pre-commit run` when the `pre-commit` tool is available.
+
+#### Scenario: Direct push to develop without a PR
+- **WHEN** a developer runs `git push origin develop` from a local branch
+- **THEN** `.githooks/pre-push` exits non-zero AND the push is rejected before reaching GitHub
+
+#### Scenario: pre-commit not installed, commit attempted on develop
+- **WHEN** a developer without `pre-commit` installed runs `git commit` on `develop`
+- **THEN** `.githooks/pre-commit` (native bash) detects the branch AND exits non-zero AND the commit is rejected
+
+
+### Requirement: Squash-only merge method on develop and master
+The system SHALL enforce squash merges as the only allowed merge method for PRs targeting `develop` and `master`, both via GitHub Rulesets (`allowed_merge_methods: [squash]`) and documented in `CONTRIBUTING.md`. This maintains a linear, readable history where each PR corresponds to exactly one commit on the integration and release branches.
+
+#### Scenario: Attempt to create a merge commit on develop
+- **WHEN** a reviewer clicks "Create a merge commit" on a PR targeting `develop`
+- **THEN** GitHub disables the button AND only "Squash and merge" is available
+
+#### Scenario: Attempt to rebase-merge into master
+- **WHEN** a maintainer attempts a rebase merge into `master`
+- **THEN** GitHub blocks the merge AND only squash is offered
+
+
+### Requirement: Worktree-based development workflow mandatory
+The system SHALL mandate that every non-trivial development task (feature, fix, chore, docs) uses a git worktree instead of a direct branch checkout on the main clone. The workflow is: `git worktree add ../<repo>-<branch> -b <type>/<slug>`, work in the worktree, push the branch, open a PR to `develop`, squash merge, then `git worktree remove`. This prevents accidental branch switches that bypass local hooks. AI assistants (Claude Code) SHALL follow this workflow without exception. Documented in `CONTRIBUTING.md` and enforced by `CLAUDE.md`.
+
+#### Scenario: AI assistant attempts git checkout on main clone
+- **WHEN** Claude Code runs `git checkout develop` on the main working directory
+- **THEN** the action violates `CLAUDE.md` non-negotiable rules AND the session MUST be stopped and restarted from a worktree
+
+#### Scenario: Developer starts a new feature
+- **WHEN** a developer begins work on `feat/new-feature`
+- **THEN** they run `git worktree add ../Here.Sdk.<Repo>-feat-new-feature -b feat/new-feature` AND all work happens in that worktree AND the main clone stays on its current branch
