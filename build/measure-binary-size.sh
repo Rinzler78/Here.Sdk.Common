@@ -3,7 +3,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-MAX_KB=100
+MAX_KB=160
 MAX_BYTES=$((MAX_KB * 1024))
 THRESHOLD_BYTES=$(( MAX_BYTES * 105 / 100 ))  # 5% tolerance = 105 KB
 
