@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Here.Sdk.Common.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Here.Sdk.Common.Benchmarks", "tests\Here.Sdk.Common.Benchmarks\Here.Sdk.Common.Benchmarks.csproj", "{379C6B6D-BB76-4057-879D-151B88D942D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Here.Sdk.Common.IntegrationTests", "tests\Here.Sdk.Common.IntegrationTests\Here.Sdk.Common.IntegrationTests.csproj", "{B2C4E5F6-1234-4567-89AB-CDEF01234567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Here.Sdk.Common.E2ETests", "tests\Here.Sdk.Common.E2ETests\Here.Sdk.Common.E2ETests.csproj", "{C3D5F6A7-2345-5678-9ABC-DEF012345678}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,10 +38,20 @@ Global
 		{379C6B6D-BB76-4057-879D-151B88D942D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{379C6B6D-BB76-4057-879D-151B88D942D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{379C6B6D-BB76-4057-879D-151B88D942D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C4E5F6-1234-4567-89AB-CDEF01234567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C4E5F6-1234-4567-89AB-CDEF01234567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C4E5F6-1234-4567-89AB-CDEF01234567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C4E5F6-1234-4567-89AB-CDEF01234567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D5F6A7-2345-5678-9ABC-DEF012345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D5F6A7-2345-5678-9ABC-DEF012345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D5F6A7-2345-5678-9ABC-DEF012345678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D5F6A7-2345-5678-9ABC-DEF012345678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1A9BD663-A965-46B6-BBAB-9D969C518FFE} = {0E7D5A30-8EA7-427F-BCA0-F67801D43A60}
 		{A6D43446-86AA-4D9F-B5FC-35B1DFF2048C} = {6711DB26-0039-41B2-8F42-CF38974BB979}
 		{379C6B6D-BB76-4057-879D-151B88D942D2} = {6711DB26-0039-41B2-8F42-CF38974BB979}
+		{B2C4E5F6-1234-4567-89AB-CDEF01234567} = {6711DB26-0039-41B2-8F42-CF38974BB979}
+		{C3D5F6A7-2345-5678-9ABC-DEF012345678} = {6711DB26-0039-41B2-8F42-CF38974BB979}
 	EndGlobalSection
 EndGlobal
