@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Enforce Conventional Commits via pre-commit, with native fallback.
+set -euo pipefail
+
+if command -v pre-commit >/dev/null 2>&1; then
+  exec pre-commit run --hook-stage commit-msg --commit-msg-filename "$1"
+fi
+
+MSG=$(head -1 "$1")
+if ! echo "$MSG" | grep -qE '^(feat|fix|docs|chore|ci|refactor|test|style|perf|spec|build|revert)(\(.+\))?: .+'; then
+  echo "[commit-msg] REFUSING: message does not follow Conventional Commits." >&2
+  echo "  Expected: type(scope)?: description" >&2
+  echo "  Got:      $MSG" >&2
+  exit 1
+fi

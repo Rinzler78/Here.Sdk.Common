@@ -9,6 +9,10 @@ repos:
       - id: check-merge-conflict
       - id: no-commit-to-branch
         args: [--branch, master, --branch, develop, --pattern, "release/.*"]
+        stages: [pre-commit]
+      - id: no-commit-to-branch
+        args: [--branch, master, --branch, develop, --pattern, "release/.*"]
+        stages: [pre-push]
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.4.0
@@ -29,3 +33,63 @@ repos:
     hooks:
       - id: detect-secrets
         args: [--baseline, .secrets.baseline]
+
+  # ── cspell (requires .cspell.json at repo root) ───────────────────────────
+  - repo: local
+    hooks:
+      - id: cspell
+        name: cspell
+        language: node
+        entry: npx --yes cspell lint --no-progress --no-summary
+        types: [text]
+        exclude: "^(openspec/changes/archive/|obj/|bin/|artifacts/)"
+        additional_dependencies: [cspell]
+        stages: [pre-commit]
+
+  # ── dotnet format (C# files only — silent on repos without .cs) ───────────
+  - repo: local
+    hooks:
+      - id: dotnet-format
+        name: dotnet format
+        language: system
+        entry: dotnet format --verify-no-changes
+        pass_filenames: false
+        files: '\.cs$'
+
+  # ── markdownlint ──────────────────────────────────────────────────────────
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.43.0
+    hooks:
+      - id: markdownlint
+        args: [--disable, MD013, MD033, --]
+
+  # ── yamllint ──────────────────────────────────────────────────────────────
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-d, relaxed]
+
+  # ── pre-push stage ────────────────────────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: dotnet-restore-locked
+        name: package restore (locked mode)
+        language: system
+        entry: bash -c 'find . -maxdepth 4 -name packages.lock.json -quit 2>/dev/null && dotnet restore --locked-mode --no-cache || echo "[restore] skipped — no lock files"'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: dotnet-doc-check
+        name: XML documentation completeness
+        language: system
+        entry: bash -c 'ls ./*.sln >/dev/null 2>&1 && dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet || echo "[doc] skipped — no solution found"'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: coverage-gate
+        name: coverage gate
+        language: system
+        entry: bash -c '[ -f ./build/coverage-gate.sh ] && ./build/coverage-gate.sh || echo "[coverage] skipped — coverage-gate.sh not found"'
+        pass_filenames: false
+        stages: [pre-push]
