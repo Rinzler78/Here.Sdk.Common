@@ -17,7 +17,7 @@ GIT_DIR_PATH=$(git rev-parse --git-dir 2>/dev/null)
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 if [[ "$GIT_DIR_PATH" == "$GIT_ROOT/.git" || "$GIT_DIR_PATH" == ".git" ]]; then
   echo "[worktree-warn] Committing from the main clone on branch '$BRANCH'." >&2
-  echo "  Convention: git worktree add .worktrees/$BRANCH -b $BRANCH" >&2
+  echo "  Convention: git worktree add .worktrees/$BRANCH $BRANCH" >&2
 fi
 
 if command -v pre-commit >/dev/null 2>&1; then

@@ -76,21 +76,21 @@ repos:
       - id: dotnet-restore-locked
         name: package restore (locked mode)
         language: system
-        entry: bash -c 'find . -maxdepth 4 -name packages.lock.json -quit 2>/dev/null && dotnet restore --locked-mode --no-cache || echo "[restore] skipped — no lock files"'
+        entry: bash -c 'if find . -maxdepth 4 -name packages.lock.json -print -quit 2>/dev/null | grep -q .; then dotnet restore --locked-mode --no-cache; else echo "[restore] skipped — no lock files"; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: dotnet-doc-check
         name: XML documentation completeness
         language: system
-        entry: bash -c 'ls ./*.sln >/dev/null 2>&1 && dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet || echo "[doc] skipped — no solution found"'
+        entry: bash -c 'if ls ./*.sln >/dev/null 2>&1; then dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet; else echo "[doc] skipped — no solution found"; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: coverage-gate
         name: coverage gate
         language: system
-        entry: bash -c '[ -f ./build/coverage-gate.sh ] && ./build/coverage-gate.sh || echo "[coverage] skipped — coverage-gate.sh not found"'
+        entry: bash -c 'if [ -f ./build/coverage-gate.sh ]; then ./build/coverage-gate.sh; else echo "[coverage] skipped — coverage-gate.sh not found"; fi'
         pass_filenames: false
         stages: [pre-push]
 

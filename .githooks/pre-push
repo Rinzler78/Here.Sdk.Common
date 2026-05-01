@@ -38,3 +38,12 @@ if command -v dotnet >/dev/null 2>&1 && ls ./*.sln >/dev/null 2>&1; then
     exit 1
   }
 fi
+
+# ── 5. Native fallback: coverage gate ─────────────────────────────────────────
+if [ -x ./build/coverage-gate.sh ]; then
+  echo "[coverage-gate] Checking test coverage..."
+  ./build/coverage-gate.sh || {
+    echo "[coverage-gate] REFUSED: coverage gate failed." >&2
+    exit 1
+  }
+fi
