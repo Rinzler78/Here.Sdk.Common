@@ -160,3 +160,22 @@ the baseline hooks (`codespell`, `detect-secrets`, `no-commit-to-branch`,
 
 - **WHEN** a developer stages a `.yml` file with invalid indentation
 - **THEN** `yamllint` exits non-zero AND the commit is rejected
+
+### Requirement: shellcheck validates all bash scripts at commit
+
+`.pre-commit-config.yaml` SHALL include a `shellcheck` hook (via
+`shellcheck-py/shellcheck-py`) with `--severity=warning` and `types: [shell]`,
+so every bash script staged for commit (hook scripts, `*.sh` files) is statically
+analyzed before reaching CI.
+
+#### Scenario: Shell script with unsafe pattern blocked at commit
+
+- **WHEN** a developer stages a bash script that contains an unquoted variable or uses
+  `&&`/`||` chains where failure must propagate (SC2015)
+- **THEN** `shellcheck` exits non-zero AND the commit is rejected
+
+#### Scenario: Clean script passes
+
+- **WHEN** a developer stages a bash script with no shellcheck warnings at
+  `--severity=warning`
+- **THEN** the hook exits 0 AND the commit proceeds

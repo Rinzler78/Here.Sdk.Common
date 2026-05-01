@@ -34,6 +34,14 @@ repos:
       - id: detect-secrets
         args: [--baseline, .secrets.baseline]
 
+  # ── shellcheck — validates all bash scripts (hooks + *.sh) ──────────────────
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=warning]
+        types: [shell]
+
   # ── cspell (requires .cspell.json at repo root) ───────────────────────────
   - repo: local
     hooks:
