@@ -93,3 +93,18 @@ repos:
         entry: bash -c '[ -f ./build/coverage-gate.sh ] && ./build/coverage-gate.sh || echo "[coverage] skipped — coverage-gate.sh not found"'
         pass_filenames: false
         stages: [pre-push]
+
+      - id: openspec-lint
+        name: OpenSpec lint
+        language: system
+        entry: bash -c '[ -f ./build/openspec-lint.sh ] && bash ./build/openspec-lint.sh || echo "[openspec-lint] skipped — no build/openspec-lint.sh"'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: openspec-validate
+        name: OpenSpec validate
+        language: node
+        entry: npx --yes @fission-ai/openspec validate --changes
+        pass_filenames: false
+        stages: [pre-push]
+        additional_dependencies: ["@fission-ai/openspec@1"]

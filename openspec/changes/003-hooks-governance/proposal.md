@@ -84,3 +84,23 @@ No downstream impact — no public API change.
 ### SemVer implications
 
 NONE — governance-only change.
+
+## Alternatives considered
+
+### Keep only CI-level checks (no local hooks)
+
+Rejected: CI feedback loops are too slow for inner-loop development. A failed push
+that requires a CI round-trip (2–5 min) costs more than catching the issue locally at
+commit or push time (< 10 s).
+
+### Use only `.githooks/` native bash without pre-commit framework
+
+Rejected: native bash hooks are limited in expressiveness and hard to maintain across
+repos. The pre-commit framework provides versioned, reproducible hook configs with
+automatic dependency management. Both coexist: `.githooks/` scripts delegate to
+`pre-commit run` when available.
+
+### Single monolithic pre-push check script
+
+Rejected: breaks isolation between checks (one failure hides others), makes skipping
+individual checks harder, and is harder to test independently.
