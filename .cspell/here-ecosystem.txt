@@ -113,3 +113,10 @@ warnaserror
 worktree
 worktrees
 Newtonsoft
+heresdk
+VSTHRD
+idempotently
+Sigstore
+antimeridian
+runsettings
+Données

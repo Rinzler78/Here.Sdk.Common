@@ -1,6 +1,11 @@
-# Delta — governance (ADDED)
+# Governance
 
-## ADDED Requirements
+## Purpose
+
+Defines the branching strategy, commit conventions, code review gates, OpenSpec proposal
+workflow, release automation, secret rotation, and hook set for `Here.Sdk.Common`.
+
+## Requirements
 
 ### Requirement: Two permanent branches with strict protection
 
