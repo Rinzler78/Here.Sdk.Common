@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [develop, "feat/**", "fix/**", "chore/**", "docs/**", "spec/**"]
+    branches: [master, develop, "feat/**", "fix/**", "chore/**", "docs/**", "spec/**"]
   pull_request:
     branches: [develop, master]
 
@@ -22,7 +22,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
 
       - name: Restore
         run: dotnet restore
@@ -58,6 +61,29 @@ jobs:
         if: matrix.configuration == 'Release'
         run: ./build/detect-here-credentials.sh
 
+      - name: Vulnerability check
+        if: matrix.configuration == 'Release'
+        run: |
+          dotnet list package --vulnerable --include-transitive 2>&1 | tee /tmp/vuln.txt
+          if grep -q "has the following vulnerable packages" /tmp/vuln.txt; then
+            echo "::error::Vulnerable NuGet packages detected — fix before merging"
+            exit 1
+          fi
+
+      - name: Outdated packages check
+        if: matrix.configuration == 'Release'
+        run: dotnet list package --outdated || true
+
+      - name: TFM check
+        if: matrix.configuration == 'Release'
+        run: |
+          missing=$(find src -name "*.csproj" -exec grep -rL "net10\.0" {} +)
+          if [ -n "$missing" ]; then
+            echo "::error::One or more library projects do not target net10.0"
+            echo "$missing"
+            exit 1
+          fi
+
       - name: Pack
         if: matrix.configuration == 'Release'
         run: dotnet pack src/Here.Sdk.Common -c Release --no-build -o artifacts/packages
@@ -72,3 +98,38 @@ jobs:
         with:
           name: coverage-report
           path: artifacts/TestResults/**/coverage.cobertura.xml
+
+      - name: Upload packages
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nuget-packages
+          path: artifacts/packages/*.nupkg
+
+  publish:
+    name: publish to NuGet
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    environment: nuget-production
+
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/packages
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Push to NuGet
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push artifacts/packages/*.nupkg \
+            --api-key "$NUGET_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

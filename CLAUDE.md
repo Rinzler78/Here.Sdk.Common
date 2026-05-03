@@ -5,7 +5,7 @@ Repository: primitive value objects, enums, exceptions, and neutral helpers for 
 ## Non-negotiable rules (auto-enforced)
 
 - **Language:** English (en-US) only — identifiers, docs, comments, commits, PRs, issues. Enforced by `cspell` + `codespell` in pre-commit and CI. Non-ASCII Latin/Cyrillic/CJK forbidden in `src/**/*.cs`.
-- **Branches:** never commit directly on `main`, `develop`, `release/*`. Work on `feat/*`, `fix/*`, `chore/*`, `docs/*`, `spec/*`. Enforced by `branch-guard` hook + GitHub Rulesets.
+- **Branches:** never commit directly on `master`, `develop`, `release/*`. Work on `feat/*`, `fix/*`, `chore/*`, `docs/*`, `spec/*`. Enforced by `branch-guard` hook + GitHub Rulesets.
 - **Commits:** Conventional Commits only. Breaking changes via `feat!:` / `fix!:` + `BREAKING CHANGE:` footer. Release Please owns tags, CHANGELOG, version bumps.
 - **Secrets:** no HERE credentials, NuGet keys, GitHub tokens anywhere. `detect-secrets` + `detect-here-credentials.sh` pre-commit hooks.
 - **Coverage (hard gate):** ≥ 90 % line + 90 % branch + 95 % method **globally AND per file**. 100 % on public API. One file below threshold fails the PR.

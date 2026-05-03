@@ -7,6 +7,8 @@
     <WarningsAsErrors />
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Lock file for phantom-dependency detection at pre-push -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <!-- Reproducible builds -->
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
