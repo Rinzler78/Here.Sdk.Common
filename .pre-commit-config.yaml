@@ -84,42 +84,42 @@ repos:
       - id: dotnet-restore-locked
         name: package restore (locked mode)
         language: system
-        entry: bash -c 'if find . -maxdepth 4 -name packages.lock.json -print -quit 2>/dev/null | grep -q .; then dotnet restore --locked-mode --no-cache; else echo "[restore] skipped — no lock files"; fi'
+        entry: bash -c 'if find . -maxdepth 4 -name packages.lock.json -print -quit 2>/dev/null | grep -q .; then dotnet restore --locked-mode --no-cache || exit 1; else echo "[restore] skipped — no lock files"; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: dotnet-doc-check
         name: XML documentation completeness
         language: system
-        entry: bash -c 'if ls ./*.sln >/dev/null 2>&1; then dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet; else echo "[doc] skipped — no solution found"; fi'
+        entry: bash -c 'if ls ./*.sln >/dev/null 2>&1; then dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet || exit 1; else echo "[doc] skipped — no solution found"; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: coverage-gate
         name: coverage gate
         language: system
-        entry: bash -c 'if [ -f ./build/coverage-gate.sh ]; then ./build/coverage-gate.sh; else echo "[coverage] skipped — coverage-gate.sh not found"; fi'
+        entry: bash -c 'if [ -f ./build/coverage-gate.sh ]; then ./build/coverage-gate.sh || exit 1; else echo "[coverage] skipped — coverage-gate.sh not found"; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: openspec-lint
         name: OpenSpec lint
         language: system
-        entry: bash -c '[ -f ./build/openspec-lint.sh ] && bash ./build/openspec-lint.sh || echo "[openspec-lint] skipped — no build/openspec-lint.sh"'
+        entry: bash -c 'if [ -f ./build/openspec-lint.sh ]; then bash ./build/openspec-lint.sh || exit 1; else echo "[openspec-lint] skipped — no build/openspec-lint.sh"; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: dotnet-vuln-check
         name: package vulnerability check
         language: system
-        entry: bash -c 'if ! ls ./*.sln >/dev/null 2>&1; then echo "[vuln] skipped"; exit 0; fi; out=$(dotnet list package --vulnerable --include-transitive 2>&1); echo "$out"; if echo "$out" | grep -q "has the following vulnerable packages"; then echo "[vuln] FAIL -- vulnerable packages detected" >&2; exit 1; fi'
+        entry: bash -c 'if ! ls ./*.sln >/dev/null 2>&1; then echo "[vuln] skipped"; exit 0; fi; out=$(dotnet list package --vulnerable --include-transitive 2>&1); rc=$?; echo "$out"; if [ $rc -ne 0 ]; then echo "[vuln] FAIL -- dotnet list package exited $rc" >&2; exit 1; fi; if echo "$out" | grep -q "has the following vulnerable packages"; then echo "[vuln] FAIL -- vulnerable packages detected" >&2; exit 1; fi'
         pass_filenames: false
         stages: [pre-push]
 
       - id: dotnet-tfm-check
         name: TFM version check (net10.0 required)
         language: system
-        entry: bash -c 'missing=$(grep -rL "net10\.0" src 2>/dev/null || true); if [ -n "$missing" ]; then echo "[tfm] FAIL -- missing net10.0 in:" >&2; echo "$missing" >&2; exit 1; fi; echo "[tfm] ok"'
+        entry: bash -c 'missing=$(find src -name "*.csproj" -exec grep -rL "net10\.0" {} + 2>/dev/null || true); if [ -n "$missing" ]; then echo "[tfm] FAIL -- missing net10.0 in:" >&2; echo "$missing" >&2; exit 1; fi; echo "[tfm] ok"'
         pass_filenames: false
         stages: [pre-push]
 
