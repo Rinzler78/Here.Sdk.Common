@@ -1,6 +1,6 @@
 # CLAUDE.md — Here.Sdk.Common
 
-Repository: primitive value objects, enums, exceptions, and neutral helpers for the `Here.Sdk.*` ecosystem. Zero runtime dependencies. TFM: `netstandard2.0;netstandard2.1;net8.0`. License: MIT. Community project, not affiliated with HERE Technologies.
+Repository: primitive value objects, enums, exceptions, and neutral helpers for the `Here.Sdk.*` ecosystem. Zero runtime dependencies. TFM: `netstandard2.0;net8.0;net9.0;net10.0`. License: MIT. Community project, not affiliated with HERE Technologies.
 
 ## Non-negotiable rules (auto-enforced)
 
