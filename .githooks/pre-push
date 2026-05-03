@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Block direct pushes to protected branches, then run pre-push checks.
+# stdin: <local-ref> <local-sha> <remote-ref> <remote-sha>
+# Active via: git config core.hooksPath .githooks
+set -euo pipefail
+
+# ── 1. Branch guard ───────────────────────────────────────────────────────────
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/master|refs/heads/develop|refs/heads/release/*)
+      branch="${remote_ref#refs/heads/}"
+      echo "[branch-guard] REFUSING: direct push to '$branch' is forbidden." >&2
+      echo "  Open a PR from your feature branch targeting '$branch'." >&2
+      exit 1
+      ;;
+  esac
+done
+
+# ── 2. Delegate to pre-commit pre-push stage when available ───────────────────
+if command -v pre-commit >/dev/null 2>&1; then
+  exec pre-commit run --hook-stage pre-push
+fi
+
+# ── 3. Native fallback: package restore check ─────────────────────────────────
+if find . -maxdepth 4 -name "packages.lock.json" -quit 2>/dev/null; then
+  echo "[package-restore] Checking locked dependencies..."
+  dotnet restore --locked-mode --no-cache || {
+    echo "[package-restore] REFUSED: run 'dotnet restore', commit packages.lock.json." >&2
+    exit 1
+  }
+fi
+
+# ── 4. Native fallback: XML doc check ─────────────────────────────────────────
+if command -v dotnet >/dev/null 2>&1 && ls ./*.sln >/dev/null 2>&1; then
+  echo "[xml-doc] Checking XML documentation..."
+  dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet || {
+    echo "[xml-doc] REFUSED: missing XML doc on public members (CS1591)." >&2
+    exit 1
+  }
+fi
+
+# ── 5. Native fallback: coverage gate ─────────────────────────────────────────
+if [ -x ./build/coverage-gate.sh ]; then
+  echo "[coverage-gate] Checking test coverage..."
+  ./build/coverage-gate.sh || {
+    echo "[coverage-gate] REFUSED: coverage gate failed." >&2
+    exit 1
+  }
+fi

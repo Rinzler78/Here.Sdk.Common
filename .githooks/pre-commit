@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Block direct commits on protected branches, then run pre-commit checks.
+# Active via: git config core.hooksPath .githooks
+set -euo pipefail
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+case "$BRANCH" in
+  master|develop|release/*)
+    echo "[branch-guard] REFUSING: direct commit on '$BRANCH' is forbidden." >&2
+    echo "  Create a feature branch: git switch -c feat/<slug>" >&2
+    exit 1
+    ;;
+esac
+
+# ── Worktree convention warning (non-blocking) ────────────────────────────────
+GIT_DIR_PATH=$(git rev-parse --git-dir 2>/dev/null)
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [[ "$GIT_DIR_PATH" == "$GIT_ROOT/.git" || "$GIT_DIR_PATH" == ".git" ]]; then
+  echo "[worktree-warn] Committing from the main clone on branch '$BRANCH'." >&2
+  echo "  Convention: git worktree add .worktrees/<slug> -b <type>/<slug>" >&2
+fi
+
+if command -v pre-commit >/dev/null 2>&1; then
+  exec pre-commit run --hook-stage pre-commit
+fi

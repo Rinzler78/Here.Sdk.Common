@@ -9,6 +9,10 @@ repos:
       - id: check-merge-conflict
       - id: no-commit-to-branch
         args: [--branch, master, --branch, develop, --pattern, "release/.*"]
+        stages: [pre-commit]
+      - id: no-commit-to-branch
+        args: [--branch, master, --branch, develop, --pattern, "release/.*"]
+        stages: [pre-push]
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.4.0
@@ -29,3 +33,100 @@ repos:
     hooks:
       - id: detect-secrets
         args: [--baseline, .secrets.baseline]
+
+  # ── shellcheck — validates all bash scripts (hooks + *.sh) ──────────────────
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=warning]
+        types: [shell]
+
+  # ── cspell (requires .cspell.json at repo root) ───────────────────────────
+  - repo: local
+    hooks:
+      - id: cspell
+        name: cspell
+        language: node
+        entry: npx --yes cspell lint --no-progress --no-summary
+        types: [text]
+        exclude: "^(openspec/changes/archive/|obj/|bin/|artifacts/)"
+        additional_dependencies: [cspell]
+        stages: [pre-commit]
+
+  # ── dotnet format (C# files only — silent on repos without .cs) ───────────
+  - repo: local
+    hooks:
+      - id: dotnet-format
+        name: dotnet format
+        language: system
+        entry: dotnet format --verify-no-changes
+        pass_filenames: false
+        files: '\.cs$'
+
+  # ── markdownlint ──────────────────────────────────────────────────────────
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.43.0
+    hooks:
+      - id: markdownlint
+        args: [--disable, MD013, MD033, --]
+
+  # ── yamllint ──────────────────────────────────────────────────────────────
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-d, relaxed]
+
+  # ── pre-push stage ────────────────────────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: dotnet-restore-locked
+        name: package restore (locked mode)
+        language: system
+        entry: bash -c 'if find . -maxdepth 4 -name packages.lock.json -print -quit 2>/dev/null | grep -q .; then dotnet restore --locked-mode --no-cache || exit 1; else echo "[restore] skipped — no lock files"; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: dotnet-doc-check
+        name: XML documentation completeness
+        language: system
+        entry: bash -c 'if ls ./*.sln >/dev/null 2>&1; then dotnet build -c Release --warnaserror:CS1591 --no-incremental -v quiet || exit 1; else echo "[doc] skipped — no solution found"; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: coverage-gate
+        name: coverage gate
+        language: system
+        entry: bash -c 'if [ -f ./build/coverage-gate.sh ]; then ./build/coverage-gate.sh || exit 1; else echo "[coverage] skipped — coverage-gate.sh not found"; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: openspec-lint
+        name: OpenSpec lint
+        language: system
+        entry: bash -c 'if [ -f ./build/openspec-lint.sh ]; then bash ./build/openspec-lint.sh || exit 1; else echo "[openspec-lint] skipped — no build/openspec-lint.sh"; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: dotnet-vuln-check
+        name: package vulnerability check
+        language: system
+        entry: bash -c 'if ! ls ./*.sln >/dev/null 2>&1; then echo "[vuln] skipped"; exit 0; fi; out=$(dotnet list package --vulnerable --include-transitive 2>&1); rc=$?; echo "$out"; if [ $rc -ne 0 ]; then echo "[vuln] FAIL -- dotnet list package exited $rc" >&2; exit 1; fi; if echo "$out" | grep -q "has the following vulnerable packages"; then echo "[vuln] FAIL -- vulnerable packages detected" >&2; exit 1; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: dotnet-tfm-check
+        name: TFM version check (net10.0 required)
+        language: system
+        entry: bash -c 'missing=$(find src -name "*.csproj" -exec grep -rL "net10\.0" {} + 2>/dev/null || true); if [ -n "$missing" ]; then echo "[tfm] FAIL -- missing net10.0 in:" >&2; echo "$missing" >&2; exit 1; fi; echo "[tfm] ok"'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: openspec-validate
+        name: OpenSpec validate
+        language: node
+        entry: npx --yes @fission-ai/openspec validate --changes
+        pass_filenames: false
+        stages: [pre-push]
+        additional_dependencies: ["@fission-ai/openspec@1"]
