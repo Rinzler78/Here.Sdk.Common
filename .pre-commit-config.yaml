@@ -48,7 +48,7 @@ repos:
       - id: cspell
         name: cspell
         language: node
-        entry: npx --yes cspell lint --no-progress --no-summary
+        entry: npx --yes cspell lint --no-progress --no-summary --locale en-US
         types: [text]
         exclude: "^(openspec/changes/archive/|obj/|bin/|artifacts/)"
         additional_dependencies: [cspell]
@@ -120,6 +120,21 @@ repos:
         name: TFM version check (net10.0 required)
         language: system
         entry: bash -c 'missing=$(find src -name "*.csproj" -exec grep -rL "net10\.0" {} + 2>/dev/null || true); if [ -n "$missing" ]; then echo "[tfm] FAIL -- missing net10.0 in:" >&2; echo "$missing" >&2; exit 1; fi; echo "[tfm] ok"'
+        pass_filenames: false
+        stages: [pre-push]
+
+
+      - id: dotnet-outdated-check
+        name: outdated packages check (warning)
+        language: system
+        entry: bash -c 'if ! ls ./*.sln >/dev/null 2>&1; then echo "[outdated] skipped"; exit 0; fi; out=$(dotnet list package --outdated 2>&1); echo "$out"; if echo "$out" | grep -q "^   >"; then echo "[outdated] WARNING -- outdated packages detected (non-blocking)"; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: readme-check
+        name: README completeness check
+        language: system
+        entry: bash -c 'f=README.md; if [ ! -f "$f" ]; then echo "[readme] FAIL -- README.md not found" >&2; exit 1; fi; for section in "Installation" "License"; do if ! grep -qi "^#.*$section" "$f"; then echo "[readme] FAIL -- missing section -- $section" >&2; exit 1; fi; done; echo "[readme] ok"'
         pass_filenames: false
         stages: [pre-push]
 

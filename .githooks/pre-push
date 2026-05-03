@@ -47,3 +47,25 @@ if [ -x ./build/coverage-gate.sh ]; then
     exit 1
   }
 fi
+
+# ── 6. Native fallback: vulnerability check ───────────────────────────────────
+if command -v dotnet >/dev/null 2>&1 && ls ./*.sln >/dev/null 2>&1; then
+  echo "[vuln-check] Checking for vulnerable packages..."
+  out=$(dotnet list package --vulnerable --include-transitive 2>&1)
+  rc=$?
+  echo "$out"
+  if [ $rc -ne 0 ]; then
+    echo "[vuln-check] REFUSED: dotnet list package failed (exit $rc)." >&2
+    exit 1
+  fi
+  if echo "$out" | grep -q "has the following vulnerable packages"; then
+    echo "[vuln-check] REFUSED: vulnerable NuGet packages detected." >&2
+    exit 1
+  fi
+fi
+
+# ── 7. Native fallback: outdated packages (warning only) ──────────────────────
+if command -v dotnet >/dev/null 2>&1 && ls ./*.sln >/dev/null 2>&1; then
+  echo "[outdated] Checking for outdated packages (non-blocking)..."
+  dotnet list package --outdated 2>&1 || true
+fi
