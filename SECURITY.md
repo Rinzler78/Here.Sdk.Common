@@ -11,5 +11,6 @@ We aim to acknowledge reports within 48 hours and provide a fix within 14 days f
 ## Scope
 
 This package contains no credentials, no network I/O, and no secret-handling code. Security concerns are limited to:
+
 - Malformed input causing panics or memory issues (e.g. in `FlexiblePolyline.Decode`)
 - Incorrect WGS84 validation allowing invalid geographic data to propagate downstream
