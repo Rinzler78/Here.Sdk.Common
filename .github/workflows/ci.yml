@@ -25,6 +25,7 @@ jobs:
           dotnet-version: |
             8.0.x
             9.0.x
+            10.0.x
 
       - name: Restore
         run: dotnet restore
@@ -59,6 +60,28 @@ jobs:
       - name: Detect credentials
         if: matrix.configuration == 'Release'
         run: ./build/detect-here-credentials.sh
+
+      - name: Vulnerability check
+        if: matrix.configuration == 'Release'
+        run: |
+          dotnet list package --vulnerable --include-transitive 2>&1 | tee /tmp/vuln.txt
+          if grep -q "has the following vulnerable packages" /tmp/vuln.txt; then
+            echo "::error::Vulnerable NuGet packages detected — fix before merging"
+            exit 1
+          fi
+
+      - name: Outdated packages check
+        if: matrix.configuration == 'Release'
+        run: dotnet list package --outdated || true
+
+      - name: TFM check
+        if: matrix.configuration == 'Release'
+        run: |
+          if grep -rL "net10\.0" src/**/*.csproj 2>/dev/null | grep -q .; then
+            echo "::error::One or more library projects do not target net10.0"
+            grep -rL "net10\.0" src/**/*.csproj
+            exit 1
+          fi
 
       - name: Pack
         if: matrix.configuration == 'Release'

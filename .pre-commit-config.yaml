@@ -109,6 +109,20 @@ repos:
         pass_filenames: false
         stages: [pre-push]
 
+      - id: dotnet-vuln-check
+        name: package vulnerability check
+        language: system
+        entry: bash -c 'if ! ls ./*.sln >/dev/null 2>&1; then echo "[vuln] skipped"; exit 0; fi; out=$(dotnet list package --vulnerable --include-transitive 2>&1); echo "$out"; if echo "$out" | grep -q "has the following vulnerable packages"; then echo "[vuln] FAIL -- vulnerable packages detected" >&2; exit 1; fi'
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: dotnet-tfm-check
+        name: TFM version check (net10.0 required)
+        language: system
+        entry: bash -c 'missing=$(grep -rL "net10\.0" src 2>/dev/null || true); if [ -n "$missing" ]; then echo "[tfm] FAIL -- missing net10.0 in:" >&2; echo "$missing" >&2; exit 1; fi; echo "[tfm] ok"'
+        pass_filenames: false
+        stages: [pre-push]
+
       - id: openspec-validate
         name: OpenSpec validate
         language: node
