@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [master, develop, "feat/**", "fix/**", "chore/**", "docs/**", "spec/**"]
+    tags: ["v*.*.*"]
   pull_request:
     branches: [develop, master]
 
@@ -86,7 +87,7 @@ jobs:
 
       - name: Pack
         if: matrix.configuration == 'Release'
-        run: dotnet pack src/Here.Sdk.Common -c Release --no-build -o artifacts/packages
+        run: dotnet pack src/Here.Sdk.Common -c Release --no-build -o artifacts/packages --include-symbols
 
       - name: Binary size check
         if: matrix.configuration == 'Release'
@@ -94,23 +95,23 @@ jobs:
 
       - name: Upload coverage
         if: matrix.configuration == 'Release'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: artifacts/TestResults/**/coverage.cobertura.xml
 
       - name: Upload packages
         if: matrix.configuration == 'Release'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: nuget-packages
-          path: artifacts/packages/*.nupkg
+          path: artifacts/packages/
 
   publish:
     name: publish to NuGet
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     environment: nuget-production
 
     steps:
@@ -123,13 +124,17 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "10.0.x"
 
       - name: Push to NuGet
         env:
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
-          dotnet nuget push artifacts/packages/*.nupkg \
+          dotnet nuget push "artifacts/packages/*.nupkg" \
+            --api-key "$NUGET_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+          dotnet nuget push "artifacts/packages/*.snupkg" \
             --api-key "$NUGET_KEY" \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
