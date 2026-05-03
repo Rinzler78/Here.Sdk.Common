@@ -47,7 +47,7 @@ Guardian of the public SemVer contract for `Here.Sdk.Common`.
 
 ## Output format
 
-```
+```text
 ## Package API review — Here.Sdk.Common
 
 | Symbol | Change | Classification |
@@ -60,8 +60,7 @@ Guardian of the public SemVer contract for `Here.Sdk.Common`.
 
 ### Blockers
 - ...
-```
-
+```text
 ## Constraints
 
 - Do not modify files or push.

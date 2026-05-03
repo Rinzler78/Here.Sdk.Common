@@ -2,16 +2,34 @@
   "version": "0.2",
   "language": "en-US",
   "words": [],
-  "dictionaries": ["here-ecosystem"],
+  "dictionaries": [
+    "here-ecosystem"
+  ],
   "dictionaryDefinitions": [
-    { "name": "here-ecosystem", "path": "./.cspell/here-ecosystem.txt", "addWords": true }
+    {
+      "name": "here-ecosystem",
+      "path": "./.cspell/here-ecosystem.txt",
+      "addWords": true
+    }
   ],
   "ignorePaths": [
-    "bin/**", "obj/**", "artifacts/**", "*.lock", "*.sln",
-    "openspec/changes/archive/**"
+    "bin/**",
+    "obj/**",
+    "artifacts/**",
+    "*.lock",
+    "*.sln",
+    "openspec/changes/archive/**",
+    ".serena/**",
+    ".mcp.json",
+    ".claude/settings*.json",
+    ".secrets.baseline",
+    "packages.lock.json"
   ],
   "ignoreWords": [],
   "patterns": [
-    { "name": "non-ascii", "pattern": "[^\\x00-\\x7F]" }
+    {
+      "name": "non-ascii",
+      "pattern": "[^\\x00-\\x7F]"
+    }
   ]
 }
