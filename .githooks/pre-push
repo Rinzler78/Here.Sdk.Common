@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # ── 1. Branch guard ───────────────────────────────────────────────────────────
-while read -r local_ref local_sha remote_ref remote_sha; do
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
   case "$remote_ref" in
     refs/heads/master|refs/heads/develop|refs/heads/release/*)
       branch="${remote_ref#refs/heads/}"
@@ -22,7 +22,7 @@ if command -v pre-commit >/dev/null 2>&1; then
 fi
 
 # ── 3. Native fallback: package restore check ─────────────────────────────────
-if find . -maxdepth 4 -name "packages.lock.json" -quit 2>/dev/null; then
+if find . -maxdepth 4 -name "packages.lock.json" -print -quit 2>/dev/null | grep -q .; then
   echo "[package-restore] Checking locked dependencies..."
   dotnet restore --locked-mode --no-cache || {
     echo "[package-restore] REFUSED: run 'dotnet restore', commit packages.lock.json." >&2
