@@ -75,9 +75,33 @@ jobs:
           name: coverage-report
           path: artifacts/TestResults/**/coverage.cobertura.xml
 
-      - name: Publish to NuGet
-        if: matrix.configuration == 'Release' && github.ref == 'refs/heads/master' && github.event_name == 'push'
-        environment: nuget-production
+      - name: Upload packages
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nuget-packages
+          path: artifacts/packages/*.nupkg
+
+  publish:
+    name: publish to NuGet
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    environment: nuget-production
+
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/packages
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Push to NuGet
         env:
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
