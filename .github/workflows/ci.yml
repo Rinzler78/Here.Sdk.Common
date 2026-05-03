@@ -77,9 +77,10 @@ jobs:
       - name: TFM check
         if: matrix.configuration == 'Release'
         run: |
-          if grep -rL "net10\.0" src/**/*.csproj 2>/dev/null | grep -q .; then
+          missing=$(find src -name "*.csproj" -exec grep -rL "net10\.0" {} +)
+          if [ -n "$missing" ]; then
             echo "::error::One or more library projects do not target net10.0"
-            grep -rL "net10\.0" src/**/*.csproj
+            echo "$missing"
             exit 1
           fi
 
