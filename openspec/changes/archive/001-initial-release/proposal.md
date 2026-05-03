@@ -9,14 +9,17 @@ reviewers: []
 created: 2026-04-18
 updated: 2026-04-19
 target-specs:
-  - openspec/specs/package-api/spec.md
-  - openspec/specs/testing/spec.md
-  - openspec/specs/coding-principles/spec.md
-  - openspec/specs/performance/spec.md
-  - openspec/specs/governance/spec.md
-  - openspec/specs/openspec-methodology/spec.md
-  - openspec/specs/github-provisioning/spec.md
+
+- openspec/specs/package-api/spec.md
+- openspec/specs/testing/spec.md
+- openspec/specs/coding-principles/spec.md
+- openspec/specs/performance/spec.md
+- openspec/specs/governance/spec.md
+- openspec/specs/openspec-methodology/spec.md
+- openspec/specs/github-provisioning/spec.md
+
 semver-impact: MINOR
+
 ---
 
 ## Why

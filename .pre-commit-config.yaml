@@ -70,6 +70,7 @@ repos:
     hooks:
       - id: markdownlint
         args: [--disable, MD013, MD033, --]
+        exclude: '^(\.claude/|\.serena/)'
 
   # ── yamllint ──────────────────────────────────────────────────────────────
   - repo: https://github.com/adrienverge/yamllint.git

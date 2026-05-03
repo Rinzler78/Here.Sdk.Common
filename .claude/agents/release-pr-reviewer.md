@@ -35,7 +35,7 @@ You review only Release Please bot PRs.
 
 ## Output
 
-```
+```text
 ## Release PR review — Here.Sdk.Common vX.Y.Z
 
 **Expected bump:** MAJOR | MINOR | PATCH (from N commits since last tag)
@@ -44,8 +44,7 @@ You review only Release Please bot PRs.
 **Changelog coverage:** complete / missing: [list]
 **Other file changes:** none / [list]
 **Verdict:** APPROVE | REQUEST_CHANGES
-```
-
+```text
 ## Constraints
 
 - Do not modify the PR.

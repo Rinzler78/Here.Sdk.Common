@@ -20,7 +20,7 @@ check_file "$ROOT/openspec/AGENTS.md"
 for proposal in "$ROOT/openspec/changes"/*/proposal.md; do
   [ -f "$proposal" ] || continue
   dir=$(dirname "$proposal")
-  slug=$(basename "$dir")
+  _slug=$(basename "$dir")
 
   # Required frontmatter fields
   for field in id title status author created semver-impact; do
